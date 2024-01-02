@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.cdnfonts.com/css/cyberjunkies" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/kbquietstories" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/uefa-supercup" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/handform" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/oxen-crossbow" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Assignment 2</title>
+</head>
+<body>
+
+    <div class="game">
+        <div class="gameStatus">
+            <div class="gameStatus_stats_container">
+                
+                <div class="inGame_Menu_button_container">
+                    <button class="inGame_Menu_Btn" id="level_inGame_Menu_Btn">PAUSE</button>
+                </div>
+                <div class="player2_stats">
+                    <h3>Player 2:   </h3>
+                    <div id="lifes_status">
+                        <h3>LIVES: </h3>
+                        <h3 style="color: red;" class="player2_lives">7</h3>
+                    </div>
+                    <div id="score_status">
+                        <h3>SCORE: </h3>
+                        <h3 class="player2_score_count" style="color: red;">0</h3>
+                    </div>
+                </div>
+
+                <div id="time_status" class="ftd_style" style="color: black;">
+                    <h3>TIME: </h3>
+                    <h3 id="time_count">0:00</h3>
+                </div>
+
+                <div class="player1_stats">
+                    <h3>Player 1:   </h3>
+                    <div id="lifes_status">
+                        <h3>LIVES: </h3>
+                        <h3 class="player1_lives" style="color: red;">7</h3>
+                    </div>
+                    <div id="score_status">
+                        <h3>SCORE: </h3>
+                        <h3 class="player1_score_count" style="color: red;">0</h3>
+                    </div>
+                </div>
+                <h1 class="ftd_style" style="font-size: 1.5rem; color: black; margin: 0.7rem 0 0 2rem;">Level 1</h1>
+
+            </div>
+        </div>
+
+        <div class="game_screen">
+            <div id="player1"></div>
+
+            <div id="player2">
+                <div class="eyes">
+                  <div class="eye leftEye"><div class="iris"></div></div>
+                  <div class="eye rightEye"><div class="iris"></div></div>
+                </div>
+                <div class="ghostTail"></div>
+            </div>
+
+            <div id="player1_door"></div>
+            <div id="player2_door"></div>
+
+            <div class="enemies_container">
+                <div class="enemy"></div>
+                <div class="enemy"></div>
+                <div class="enemy"></div>
+                <div class="enemy"></div>
+                <div class="enemy"></div>
+                <div class="enemy"></div>
+                <div class="enemy"></div>
+                <div class="enemy"></div>
+            </div>
+
+            <div class="hearts_container">
+                <div class="heart"></div>
+                <div class="heart"></div>
+                <div class="heart"></div>
+                <div class="heart"></div>
+
+                <div class="valuePack"></div>
+                <div class="valuePack"></div>
+                <div class="valuePack"></div>
+                <div class="valuePack"></div>
+            </div>
+        </div>
+
+        <div class="loose_menu_container">
+            <div class="loose_container_buttons">
+                <h1 id="whichPlayerLost">YOU LOST!</h1>
+                <a href="1-level.html"><button id ="win_button_menu" class="menu_item_button">PLAY AGAIN</button></a>
+                <a href="index.html"><button id ="win_button_menu" class="menu_item_button">MAIN MENU</button></a>
+            </div>
+        </div>
+
+        <div id="pause_menu_container">
+            <h1 class="ftd_style">Find the DOOR</h1>
+            <div class="menu">
+                <div class="container_buttons">
+                    <div class="menu_item">
+                        <button id="resume_button" class="menu_item_button">RESUME</button>
+                    </div>
+                    <div class="menu_item">
+                        <button id="new_game_button" class="menu_item_button"><a id="newGamebtn" href="1-level.html">NEW GAME</a></button>
+                    </div>
+                    <div class="menu_item">
+                        <button id="howToPlay_button" class="menu_item_button">How to play?</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="howToPlayModal_container">
+                <div class="howToPlayModal">
+                    <div class="howToPlayModal_title">
+                        <div class="dotted_line"></div>
+                        <h2>How To Play?</h2>
+                        <div class="dotted_line"></div>
+                    </div>
+                    <div class="howToPlayModal_section_container">
+                        <div class="howToPlayModal_section">
+                            <h3>MOVE:</h3>
+                            <div class="playerMovesInstructions">
+                                <div class="player1_playerMovesInstructions">
+                                    <ul>
+                                        <p>Player 1</p>
+                                        <li>⬆️: Move Up</li>
+                                        <li>⬇️: Move Down</li>
+                                        <li>⬅️: Move Left</li>
+                                        <li>➡️: Move Right</li>
+                                    </ul>
+                                </div>
+                                <div class="player1_playerMovesInstructions">
+                                    <ul>
+                                        <p>Player 2</p>
+                                        <li><p>W</p>: Move Up</li>
+                                        <li><p>S</p>: Move Down</li>
+                                        <li><p>D</p>: Move Left</li>
+                                        <li><p>A</p>: Move Right</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <h3>PLATFORM:</h3>
+                            <ul>
+                                <li>Two players compete against each other.</li>
+                                <li>Player 1 and Player 2 start on opposite sides of the screen.</li>
+                            </ul>
+            
+                            <h3>OBJECTIVE:</h3>
+                            <ul>
+                                <li>Navigate each level and reach the door within the time limit.</li>
+                                <li>Overall goal: Reach final level before the opponent.</li>
+                            </ul>
+    
+                            <h3>GAME MECHANICS:</h3>
+                            <ul>
+                                <li>Each player has 7 lives.</li>
+                                <li>Game has 2 minute timer.</li>
+                                <li>If no one wins within the time limit, the game is over.</li>
+                                <li>Running out of lives means and you loose.</li>
+                                <li>Winning a level adds 10 points to the player's score.</li>
+                            </ul>
+    
+                            <h3>CHALLENGES:</h3>
+                            <ul>
+                                <li>Moving objects obstruct the player's path.</li>
+                                <ul>
+                                    <li> <p>Level 1</p>: Vertical objects.</li>
+                                    <li><p>Level 2</p>: Horizontal objects.</li>
+                                </ul>
+                                <li>The speed and behavior of moving objects are random.</li>
+                                <li>Colliding with an object causes a loss of one life and resets the player to the starting position.</li>
+                            </ul>
+                            
+                            <h3>POWER-UPS:</h3>
+                            <ul>
+                                <li>Value Pack 1 (❤️): Grants an extra life.</li>
+                                <li>Value Pack 2 (🌟): Increases the player's score by 10 points.</li>
+                                <li>Both value packs appear randomly on the screen.</li>
+                                <li>Each value pack stays visible for 5 seconds and then relocates to a new random position.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="scripts/level-1.js"></script>
+</body>
+</html>
