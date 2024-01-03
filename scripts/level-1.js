@@ -1,25 +1,18 @@
 
-const player1 = document.getElementById('player1');
-const player2 = document.getElementById('player2');
+const player = document.getElementById('player');
 const enemies = document.querySelectorAll(".enemy");
 const gameArea = document.querySelector('.game_screen');
 const valuePack = document.querySelectorAll('.valuePack');
 const hearts = document.querySelectorAll('.heart');
-const initial_player1_vertical = gameArea.clientHeight - player1.offsetHeight;
-const initial_player1_horizontal = gameArea.clientWidth - player1.offsetWidth;
-const initial_player2_vertical = gameArea.clientHeight - player2.offsetHeight;
-const initial_player2_horizontal = player2.offsetWidth;
+const initial_player_vertical = gameArea.clientHeight - player.offsetHeight;
+const initial_player_horizontal = gameArea.clientWidth - player.offsetWidth;
 const valuePack_container = document.querySelector('.hearts_container');
 const player_speed = 50; // 50px per keypress
-let player1_vertical = player1.getBoundingClientRect().top;
-let player1_horizontal = player1.getBoundingClientRect().left;
-let player2_vertical = player2.getBoundingClientRect().top;
-let player2_horizontal = player2.getBoundingClientRect().left;
-let player1_lifeCount = 6;
-let player2_lifeCount = 6;
+let player_vertical = player.getBoundingClientRect().top;
+let player_horizontal = player.getBoundingClientRect().left;
+let player_lifeCount = 6;
 let Time = 120; // 2 minutes in seconds
-let player1ScoreCount = 0;
-let player2ScoreCount = 0;
+let playerScoreCount = 0;
 
 Start_Game_Loop();
 Start_Count_Down();
@@ -31,84 +24,50 @@ Randomize_Hearts_Position();
 // -----------------------------PLAYER MOVEMENT LOGIC-----------------------------
 function Reset_Player_Position(whichPlayer) {
     if (whichPlayer === 1) {
-        player1.style.top = '';
-        player1.style.left = '';
+        player.style.top = '';
+        player.style.left = '';
 
-        player1.style.bottom = '0px';
-        player1.style.right = '0px';
+        player.style.bottom = '0px';
+        player.style.right = '0px';
 
-        player1_vertical = initial_player1_vertical;
-        player1_horizontal = initial_player1_horizontal;
-    }
-    else if (whichPlayer === 2) {
-        player2.style.top = '';
-        player2.style.left = '';
-
-        player2.style.bottom = '0px';
-        player2.style.right = '0px';
-
-        player2_vertical = initial_player2_vertical;
-        player2_horizontal = initial_player2_horizontal;
+        player_vertical = initial_player_vertical;
+        player_horizontal = initial_player_horizontal;
     }
 }
 
 // Player movement
 document.addEventListener('keydown', function(event) {
-    let new_player1_vertical = player1_vertical;
-    let new_player1_horizontal = player1_horizontal;
-    let new_player2_vertical = player2_vertical;
-    let new_player2_horizontal = player2_horizontal;
+    let new_player_vertical = player_vertical;
+    let new_player_horizontal = player_horizontal;
     
     switch(event.key) {
         // Player 1
         case 'ArrowUp':
-            new_player1_vertical -= player_speed;
+            new_player_vertical -= player_speed;
             break;
         case 'ArrowDown':
-            new_player1_vertical += player_speed;
+            new_player_vertical += player_speed;
             break;
         case 'ArrowLeft':
-            new_player1_horizontal -= player_speed;
+            new_player_horizontal -= player_speed;
             break;
         case 'ArrowRight':
-            new_player1_horizontal += player_speed;
+            new_player_horizontal += player_speed;
             break;
         
-        // Player 2
-        case 'w':
-            new_player2_vertical -= player_speed;
-            break;
-        case 's':
-            new_player2_vertical += player_speed;
-            break;
-        case 'a':
-            new_player2_horizontal -= player_speed;
-            break;
-        case 'd':
-            new_player2_horizontal += player_speed;
-            break;
     }
 
     // Check boundaries
-    // Player 1
-    if (new_player1_vertical > 0 && (new_player1_vertical + player1.offsetHeight) < gameArea.offsetHeight) {
-        player1_vertical = new_player1_vertical;
+    // Player
+    if (new_player_vertical > 0 && (new_player_vertical + player.offsetHeight) < gameArea.offsetHeight) {
+        player_vertical = new_player_vertical;
     }
-    if (new_player1_horizontal > 0 && (new_player1_horizontal + player1.offsetWidth) < gameArea.offsetWidth) {
-        player1_horizontal = new_player1_horizontal;
-    }
-    // Player 2
-    if (new_player2_vertical > 0 && (new_player2_vertical + player2.offsetHeight) < gameArea.offsetHeight) {
-        player2_vertical = new_player2_vertical;
-    }
-    if (new_player2_horizontal > 0 && (new_player2_horizontal + player2.offsetWidth) < gameArea.offsetWidth) {
-        player2_horizontal = new_player2_horizontal;
+    if (new_player_horizontal > 0 && (new_player_horizontal + player.offsetWidth) < gameArea.offsetWidth) {
+        player_horizontal = new_player_horizontal;
     }
     
-    player1.style.top = `${player1_vertical}px`;
-    player1.style.left = `${player1_horizontal}px`;
-    player2.style.top = `${player2_vertical}px`;
-    player2.style.left = `${player2_horizontal}px`;
+    player.style.top = `${player_vertical}px`;
+    player.style.left = `${player_horizontal}px`;
 });
 
 // ----------------------------- Game Loop/Bullets/Collision Detection -----------------------------`
@@ -120,7 +79,7 @@ function updateGame() {
 
     checkDoor();
 
-    checkIfLost();
+    // checkIfLost();
 
     requestAnimationFrame(updateGame);
 }
@@ -149,49 +108,34 @@ function moveEnemies() {
 }
 
 function checkCollisions() {
-    const player1Rect = player1.getBoundingClientRect();
-    const player2Rect = player2.getBoundingClientRect();
+    const playerRect = player.getBoundingClientRect();
     
     // Check collision for each enemy
     enemies.forEach((enemy) => {
         const enemyRect = enemy.getBoundingClientRect();
-        // Check collision for player1
-        if (rectsIntersect(enemyRect, player1Rect)) {
-            // Handle collision with player1
+        // Check collision for player
+        if (rectsIntersect(enemyRect, playerRect)) {
+            // Handle collision with player
             Reset_Player_Position(1);
-            updateLifeCount(1, player1_lifeCount--); 
-        }
-        // Check collision for player2
-        if (rectsIntersect(enemyRect, player2Rect)) {
-            // Handle collision with player2
-            Reset_Player_Position(2);
-            updateLifeCount(2, player2_lifeCount--); 
+            updateLifeCount(1, player_lifeCount--); 
         }
     });
 
     // Check collision for each valuePack/Star
     valuePack.forEach((valuePac) => {
         const valuePackRect = valuePac.getBoundingClientRect();
-        if (rectsIntersect(valuePackRect, player1Rect)) {
+        if (rectsIntersect(valuePackRect, playerRect)) {
             valuePac.style.display = 'none';
             updateScoreCount(1);
-        }
-        if (rectsIntersect(valuePackRect, player2Rect)) {
-            valuePac.style.display = 'none';
-            updateScoreCount(2);
         }
     });
 
     // Check collision for each heart
     hearts.forEach((valuePac) => {
         const heartsRect = valuePac.getBoundingClientRect();
-        if (rectsIntersect(heartsRect, player1Rect)) {
+        if (rectsIntersect(heartsRect, playerRect)) {
             valuePac.style.display = 'none';
-            updateLifeCount(1, player1_lifeCount++);
-        }
-        if (rectsIntersect(heartsRect, player2Rect)) {
-            valuePac.style.display = 'none';
-            updateLifeCount(2, player2_lifeCount++);
+            updateLifeCount(1, player_lifeCount++);
         }
     });
 }
@@ -265,13 +209,9 @@ function checkIfLost() {
     const youLost_menu = document.querySelector('.loose_menu_container');
     const whichPlayerLost = document.getElementById("whichPlayerLost");
 
-    if (player1_lifeCount < 0) {
+    if (player_lifeCount < 0) {
         youLost_menu.style.display = 'flex';
-        whichPlayerLost.innerText = "Player-1 you LOST!!!!"
-    }
-    if (player2_lifeCount < 0) {
-        youLost_menu.style.display = 'flex';
-        whichPlayerLost.innerText = "Player-2 is a LOSER!!!!"
+        whichPlayerLost.innerText = "You LOST!!!!"
     }
     else if (Time < -1){
         youLost_menu.style.display = 'flex';
@@ -281,49 +221,27 @@ function checkIfLost() {
 
 // ----------------------------- Score and Life Count -----------------------------
 function updateScoreCount(whichPlayer){
-    const player1Score = document.querySelector(".player1_score_count");
-    const player2Score = document.querySelector(".player2_score_count");
+    const playerScore = document.querySelector(".player_score_count");
+    // const player2Score = document.querySelector(".player2_score_count");
     if(whichPlayer === 1){
-        player1ScoreCount += 10;
-        player1Score.textContent = player1ScoreCount;
-    }
-    if(whichPlayer === 2){
-        player2ScoreCount += 10;
-        player2Score.textContent = player2ScoreCount;
+        playerScoreCount += 10;
+        playerScore.textContent = playerScoreCount;
     }
 }
 
 function updateLifeCount(whichPlayer, newLifeCount) {
-    if(whichPlayer === 1){
-        var player1_lifeCountElement = document.querySelector('.player1_lives');
-        player1_lifeCountElement.textContent = newLifeCount;
-    }
-    if(whichPlayer === 2){
-        var player2_lifeCountElement = document.querySelector('.player2_lives');
-        player2_lifeCountElement.textContent = newLifeCount;
-    }
+
+    var player_lifeCountElement = document.querySelector('.player_lives');
+    player_lifeCountElement.textContent = newLifeCount;
+    
 }
 
 // ----------------------------- Door & Winning -----------------------------
 function checkDoor() {
-    const player1_door = document.getElementById('player1_door');
-    const player1_door_rect = player1_door.getBoundingClientRect();
-    const player1Rect = player1.getBoundingClientRect();
+    const player_door = document.getElementById('player_door');
+    const player_door_rect = player_door.getBoundingClientRect();
+    const playerRect = player.getBoundingClientRect();
 
-    const player2_door = document.getElementById('player2_door');
-    const player2_door_rect = player2_door.getBoundingClientRect();
-    const player2Rect = player2.getBoundingClientRect();
-
-    if(rectsIntersect(player1_door_rect, player1Rect)) {
-        updateScoreCount(1);
-        window.location.href = `./2-level.html?player1Score=${player1ScoreCount}&player2Score=${player2ScoreCount}`;
-
-    }
-    if(rectsIntersect(player2_door_rect, player2Rect)) {
-        updateScoreCount(2);
-        window.location.href = `./2-level.html?player1Score=${player1ScoreCount}&player2Score=${player2ScoreCount}`;
-
-    }
 }
 
 // -----------------------------TIME LOGIC-----------------------------
@@ -341,7 +259,7 @@ function Start_Count_Down() {
 
         if (Time === -2) {
             clearInterval(countdownTimer);
-            checkIfLost();
+            // checkIfLost();
         } else {
             Time--;
         }
