@@ -24,28 +24,104 @@ body {
     display: flex;
     flex-direction: column;
 }
-.game_screen{
-    height: 90%;
+.game_screen_level1{
+    height: 95%;
     width: 100%;
     position: relative;
-    background-color: lightgray;
     border: 2px solid black;
     overflow: hidden;
+    z-index: -2;
 }
+.game_screen_level1::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: -10%;
+    background-image: url("./assets/spacebg.gif");
+    background-repeat: repeat;
+    background-size: 100% 110%;
+    background-size: auto;
+    background-position: center;
+    z-index: -1;
+}
+
+.game_screen_level2{
+    height: 95%;
+    width: 100%;
+    position: relative;
+    border: 2px solid black;
+    overflow: hidden;
+    z-index: -2;
+}
+
+.game_screen_level2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: -10%;
+    background-image: url("./assets/forest_bg.gif");
+    background-size: cover;
+    z-index: -1;
+
+    background-color: rgba(0, 0, 0, 0.9);
+    mix-blend-mode: multiply;
+}
+.game_screen_level2 .dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black */
+    z-index: 0; /* Ensure this is above the background image */
+}
+
+.game_screen_level3{
+    height: 95%;
+    width: 100%;
+    position: relative;
+    border: 2px solid black;
+    overflow: hidden;
+    z-index: -2;
+}
+.game_screen_level3::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: -10%;
+    background-image: url("./assets/cityBG.gif");
+    background-size: cover;
+    z-index: -1;
+}
+.game_screen_level3 .dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black */
+    z-index: 0; /* Ensure this is above the background image */
+}
+
+
+
+
+
 #player {
     position: absolute;
     bottom: 0;
-    right: 0;
-    width: 0px;
-    height: 0px;
-    border-left: 30px solid transparent;
-    border-top: 30px solid black;
-    border-right: 30px solid black;
-    border-bottom: 30px solid black;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
+    width: 60px;
+    height: 80px;
+
+    background-image: url("./assets/mainChar_front.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
 }
 #player_door{
     position: absolute;
@@ -60,7 +136,7 @@ body {
 .gameStatus{
     display: flex;
     justify-content: space-around;
-    height: 10%;
+    height: 5%;
     text-align: center;
     background-color: #B59F84;
     border: 2px solid black;
@@ -104,10 +180,9 @@ body {
 .inGame_Menu_button_container{
     display: flex;
     align-items: center;
-    margin: 0 2rem;
 }
 .inGame_Menu_Btn{
-    height: 50px;
+    height: 5cm;
     outline: 0;
     cursor: pointer;
     border: 2px solid #000;
@@ -200,10 +275,10 @@ body {
 .enemy{
     position: relative;
     top: 0;
-    height: 20px;
-    width: 20px;
+    height: 13px;
+    width: 13px;
     margin: 0 2rem 0 2rem;
-    background-color: black;
+    background-color: white;
     flex-direction:row-reverse;
 }
 
@@ -391,6 +466,7 @@ body {
     text-shadow: 2px 2px 10px rgba(246, 255, 0, 0.774);
 }
 
+
 #final_stats{
     display: flex;
 }
@@ -491,8 +567,26 @@ body {
     z-index: 0;
     top: 0;
     left: 0;
-    width: 50px;
-    height: 50px;
-    background-image: url("https://media2.giphy.com/media/YondZW6AMjgTEHevF0/giphy.gif?cid=ecf05e47je00xxse2s2fw025zaafiph0fs170j0kqwr67s7g&ep=v1_stickers_search&rid=giphy.gif&ct=e");
+    width: 35px;
+    height: 28px;
+    background-image: url("./assets/heart.png");
     background-size: cover;
+}
+
+.slow_objects_container{
+    height: 650px;
+    margin: 10px 50px 10px 50px;
+
+}
+.reduceSpeed{
+    display: block;
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 35px;
+    height: 38px;
+    background-image: url("./assets/slowDown.png");
+    background-size: cover;
+
 }

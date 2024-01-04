@@ -1,7 +1,7 @@
 
 const player = document.getElementById('player');
 const enemies = document.querySelectorAll(".enemy");
-const gameArea = document.querySelector('.game_screen');
+const gameArea = document.querySelector('.game_screen_level1, .game_screen_level2, .game_screen_level3');
 const valuePack = document.querySelectorAll('.valuePack');
 const hearts = document.querySelectorAll('.heart');
 const initial_player_vertical = gameArea.clientHeight - player.offsetHeight;
@@ -20,6 +20,7 @@ Reset_Player_Position(1);
 Reset_Player_Position(2);
 Randomize_ValuePack_Position();
 Randomize_Hearts_Position();
+Randomize_ReduceSpeed_Position();
 
 // -----------------------------PLAYER MOVEMENT LOGIC-----------------------------
 function Reset_Player_Position(whichPlayer) {
@@ -36,6 +37,26 @@ function Reset_Player_Position(whichPlayer) {
 }
 
 // Player movement
+
+function updatePlayerView(direction) {
+    const playerView = document.getElementById('player');
+
+    switch(direction) {
+        case 'up':
+            playerView.style.backgroundImage = "url('./assets/mainChar_front.png')";
+            break;
+        case 'down':
+            playerView.style.backgroundImage = "url('./assets/mainChar_front.png')";
+            break;
+        case 'left':
+            playerView.style.backgroundImage = "url('./assets/mainChar_left.png')";
+            break;
+        case 'right':
+            playerView.style.backgroundImage = "url('./assets/mainChar_right.png')";
+            break;
+    }
+}
+
 document.addEventListener('keydown', function(event) {
     let new_player_vertical = player_vertical;
     let new_player_horizontal = player_horizontal;
@@ -44,15 +65,19 @@ document.addEventListener('keydown', function(event) {
         // Player 1
         case 'ArrowUp':
             new_player_vertical -= player_speed;
+            updatePlayerView('up');
             break;
         case 'ArrowDown':
             new_player_vertical += player_speed;
+            updatePlayerView('down');
             break;
         case 'ArrowLeft':
             new_player_horizontal -= player_speed;
+            updatePlayerView('left');
             break;
         case 'ArrowRight':
             new_player_horizontal += player_speed;
+            updatePlayerView('right');
             break;
         
     }
@@ -94,11 +119,11 @@ function moveEnemies() {
         currentPosition += speed * direction; // Multiply by direction to determine movement direction
 
         // If enemy reaches the bottom, change direction to move upwards
-        if (currentPosition > 85) {
+        if (currentPosition > 100) {
             direction = -1;
         }
         // If enemy reaches the top, change direction to move downwards
-        else if (currentPosition < 0) {
+        if (currentPosition < -5) {
             direction = 1;
         }
 
@@ -106,6 +131,41 @@ function moveEnemies() {
         enemy.style.top = `${currentPosition}vh`;
     });
 }
+
+// Store original speeds of enemies
+let originalSpeeds = new Map();
+
+// Slow down enemies
+function slowDownEnemies() {
+    enemies.forEach((enemy) => {
+        let speed = parseFloat(enemy.dataset.speed);
+
+        // Store original speed if not already stored
+        if (!originalSpeeds.has(enemy)) {
+            originalSpeeds.set(enemy, speed);
+        }
+
+        let tempSpeed = speed - 2;
+        enemy.dataset.speed = tempSpeed.toString();
+    });
+
+    // Restore original speeds after 5 seconds
+    setTimeout(restoreSpeeds, 5000);
+}
+
+// Restore the original speeds of the enemies
+function restoreSpeeds() {
+    enemies.forEach((enemy) => {
+        if (originalSpeeds.has(enemy)) {
+            enemy.dataset.speed = originalSpeeds.get(enemy).toString();
+        }
+    });
+
+    // Clear the original speeds
+    originalSpeeds.clear();
+}
+
+
 
 function checkCollisions() {
     const playerRect = player.getBoundingClientRect();
@@ -138,6 +198,16 @@ function checkCollisions() {
             updateLifeCount(1, player_lifeCount++);
         }
     });
+
+    // Check collision for each reduceSpeed
+    const reduceSpeed = document.querySelectorAll('.reduceSpeed');
+    reduceSpeed.forEach((valuePac) => {
+        const reduceSpeedRect = valuePac.getBoundingClientRect();
+        if (rectsIntersect(reduceSpeedRect, playerRect)) {
+            valuePac.style.display = 'none';
+            slowDownEnemies();
+        }
+    });
 }
 
 // Collision detection function
@@ -151,7 +221,7 @@ function rectsIntersect(rectA, rectB) {
 // Initialize enemy positions and directions
 enemies.forEach((enemy) => {
     // Assign a random speed to each enemy, between 1 and 3
-    enemy.dataset.speed = (Math.random() * 2 + 1).toString();
+    enemy.dataset.speed = (Math.random() * 1 + 1).toString();
     enemy.dataset.direction = "1"; // Direction 1 for down, -1 for up
     enemy.style.top = "-20vh"; // Start above the view
 });
@@ -170,6 +240,15 @@ function Randomize_Hearts_Position() {
     const containerRect = valuePack_container.getBoundingClientRect();
 
     hearts.forEach((heart) => {
+        heart.style.top = Math.random() * (containerRect.height - heart.clientHeight) + "px";
+        heart.style.left = Math.random() * (containerRect.width - heart.clientWidth) + "px";
+    });
+}
+function Randomize_ReduceSpeed_Position() {
+    const reduceSpeed = document.querySelectorAll('.reduceSpeed');
+    const containerRect = valuePack_container.getBoundingClientRect();
+
+    reduceSpeed.forEach((heart) => {
         heart.style.top = Math.random() * (containerRect.height - heart.clientHeight) + "px";
         heart.style.left = Math.random() * (containerRect.width - heart.clientWidth) + "px";
     });
@@ -196,8 +275,20 @@ function updateHeartsPositions() {
     });
 }
 
+function updateReduceSpeedPositions() {
+
+    const reduceSpeed = document.querySelectorAll('.reduceSpeed');
+    const containerRect = valuePack_container.getBoundingClientRect();
+
+    reduceSpeed.forEach((heart) => {
+        heart.style.top = Math.random() * (containerRect.height - heart.clientHeight) + "px";
+        heart.style.left = Math.random() * (containerRect.width - heart.clientWidth) + "px";
+    });
+}
+
 setInterval(updateValuePacPositions, 5000); // 5 seconds
 setInterval(updateHeartsPositions, 3000); // 3 seconds
+setInterval(updateReduceSpeedPositions, 7000); // 7 seconds
 
 // Start the game loop
 function Start_Game_Loop() {
