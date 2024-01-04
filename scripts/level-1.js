@@ -25,12 +25,6 @@ Randomize_ReduceSpeed_Position();
 Randomize_hammer_Position();
 Randomize_sheild_Position();
 
-
-const video = document.querySelector('video');
-
-// Play video
-video.play();
-
 // -----------------------------PLAYER MOVEMENT LOGIC-----------------------------
 function Reset_Player_Position(whichPlayer) {
     if (whichPlayer === 1) {
