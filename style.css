@@ -111,26 +111,54 @@ body {
 
 
 
+#lifes{
+    /* position: absolute; */
+    width: 30px;
+    height: 30px;
+    background-image: url("./assets/heart.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
 
+}
+#hammer{
+    /* position: absolute; */
+    width: 30px;
+    height: 30px;
+    background-image: url("./assets/hammer.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+
+}
 
 #player {
     position: absolute;
     bottom: 0;
     width: 60px;
     height: 80px;
-
     background-image: url("./assets/mainChar_front.png");
     background-size: 100%;
     background-repeat: no-repeat;
 }
-#player_door{
+#portal{
+    display: none;
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 10px;
+    right: 10px;
     width: 100px;
     height: 100px;
-    background-image: url("https://media.giphy.com/media/FoXqQO6JU3v4ZIpa4a/giphy.gif?cid=ecf05e47lwhdjd72jth0xyhc8p2sf8rg6ikzy2lb171jw9er&ep=v1_stickers_search&rid=giphy.gif&ct=s");
+    background-image: url("./assets/portal.png");
     background-size: cover;
+}
+
+#key{
+    position: absolute;
+    top: 50px;
+    left: 40px;
+    width: 40px;
+    height: 70px;
+    background-image: url("./assets/key.png");
+    background-size: cover;
+
 }
 
 .gameStatus{
@@ -156,7 +184,13 @@ body {
 }
 #lifes_status{
     display: flex;
+    justify-content: center;
+    align-items: center;
     
+}
+#x{
+    font-size: 1.5rem;
+    margin: 0;
 }
 .life_count{
     padding-left: 1.5rem;
@@ -275,11 +309,12 @@ body {
 .enemy{
     position: relative;
     top: 0;
-    height: 13px;
-    width: 13px;
+    height: 70px;
+    width: 50px;
     margin: 0 2rem 0 2rem;
-    background-color: white;
-    flex-direction:row-reverse;
+    background-image: url("./assets/rockFire_down.png");
+    background-size: cover;
+    /* flex-direction:row-reverse; */
 }
 
 .howToPlayModal_container{
@@ -483,8 +518,10 @@ body {
 .player_stats{
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0.5rem;
     color: black;
+    width: 25rem;
 }
 .player_stats h3{
     margin: 0 0.5rem;
@@ -557,7 +594,7 @@ body {
     background-size: cover;
 }
 
-.hearts_container{
+.valuepacks_container{
     height: 650px;
     margin: 10px 50px 10px 50px;
 }
@@ -573,11 +610,6 @@ body {
     background-size: cover;
 }
 
-.slow_objects_container{
-    height: 650px;
-    margin: 10px 50px 10px 50px;
-
-}
 .reduceSpeed{
     display: block;
     position: absolute;
@@ -588,5 +620,28 @@ body {
     height: 38px;
     background-image: url("./assets/slowDown.png");
     background-size: cover;
+}
 
+.hammer{
+    display: block;
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 35px;
+    height: 38px;
+    background-image: url("./assets/hammer.png");
+    background-size: cover;
+}
+
+.sheild{
+    display: block;
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 35px;
+    height: 40px;
+    background-image: url("./assets/sheild.png");
+    background-size: cover;
 }

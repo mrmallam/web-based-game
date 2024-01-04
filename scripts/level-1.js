@@ -6,21 +6,24 @@ const valuePack = document.querySelectorAll('.valuePack');
 const hearts = document.querySelectorAll('.heart');
 const initial_player_vertical = gameArea.clientHeight - player.offsetHeight;
 const initial_player_horizontal = gameArea.clientWidth - player.offsetWidth;
-const valuePack_container = document.querySelector('.hearts_container');
+const valuePack_container = document.querySelector('.valuepacks_container');
 const player_speed = 50; // 50px per keypress
 let player_vertical = player.getBoundingClientRect().top;
 let player_horizontal = player.getBoundingClientRect().left;
 let player_lifeCount = 6;
 let Time = 120; // 2 minutes in seconds
 let playerScoreCount = 0;
+let playerCharacterState = "normal";
+let keyPickedUp = false;
 
 Start_Game_Loop();
 Start_Count_Down();
 Reset_Player_Position(1);
-Reset_Player_Position(2);
 Randomize_ValuePack_Position();
 Randomize_Hearts_Position();
 Randomize_ReduceSpeed_Position();
+Randomize_hammer_Position();
+Randomize_sheild_Position();
 
 // -----------------------------PLAYER MOVEMENT LOGIC-----------------------------
 function Reset_Player_Position(whichPlayer) {
@@ -41,19 +44,53 @@ function Reset_Player_Position(whichPlayer) {
 function updatePlayerView(direction) {
     const playerView = document.getElementById('player');
 
-    switch(direction) {
-        case 'up':
-            playerView.style.backgroundImage = "url('./assets/mainChar_front.png')";
-            break;
-        case 'down':
-            playerView.style.backgroundImage = "url('./assets/mainChar_front.png')";
-            break;
-        case 'left':
-            playerView.style.backgroundImage = "url('./assets/mainChar_left.png')";
-            break;
-        case 'right':
-            playerView.style.backgroundImage = "url('./assets/mainChar_right.png')";
-            break;
+    if (playerCharacterState === "normal"){
+        switch(direction) {
+            case 'up':
+                playerView.style.backgroundImage = "url('./assets/mainChar_front.png')";
+                break;
+            case 'down':
+                playerView.style.backgroundImage = "url('./assets/mainChar_front.png')";
+                break;
+            case 'left':
+                playerView.style.backgroundImage = "url('./assets/mainChar_left.png')";
+                break;
+            case 'right':
+                playerView.style.backgroundImage = "url('./assets/mainChar_right.png')";
+                break;
+        }
+    }
+    else if (playerCharacterState === "hammer"){
+        switch(direction) {
+            case 'up':
+                playerView.style.backgroundImage = "url('./assets/mainChar_front_hammer.png')";
+                break;
+            case 'down':
+                playerView.style.backgroundImage = "url('./assets/mainChar_front_hammer.png')";
+                break;
+            case 'left':
+                playerView.style.backgroundImage = "url('./assets/mainChar_left_hammer.png')";
+                break;
+            case 'right':
+                playerView.style.backgroundImage = "url('./assets/mainChar_right_hammer.png')";
+                break;
+        }
+    }
+    else if (playerCharacterState === "sheild"){
+        switch(direction) {
+            case 'up':
+                playerView.style.backgroundImage = "url('./assets/mainChar_front_sheild.png')";
+                break;
+            case 'down':
+                playerView.style.backgroundImage = "url('./assets/mainChar_front_sheild.png')";
+                break;
+            case 'left':
+                playerView.style.backgroundImage = "url('./assets/mainChar_left_sheild.png')";
+                break;
+            case 'right':
+                playerView.style.backgroundImage = "url('./assets/mainChar_right_sheild.png')";
+                break;
+        }
     }
 }
 
@@ -121,10 +158,16 @@ function moveEnemies() {
         // If enemy reaches the bottom, change direction to move upwards
         if (currentPosition > 100) {
             direction = -1;
+
+            // replace enemy background image
+            enemy.style.backgroundImage = "url('./assets/rockFire_up.png')";
         }
         // If enemy reaches the top, change direction to move downwards
         if (currentPosition < -5) {
             direction = 1;
+
+            // replace enemy background image
+            enemy.style.backgroundImage = "url('./assets/rockFire_down.png')";
         }
 
         enemy.dataset.direction = direction.toString();
@@ -166,6 +209,50 @@ function restoreSpeeds() {
 }
 
 
+// this function will add or remove hammer from the player by updating the player's image
+function addRemove_hammer(action) {
+    const playerView = document.getElementById('player');
+
+    if (action === 'add') {
+        playerView.style.backgroundImage = "url('./assets/mainChar_front_hammer.png')";
+
+        // increment hammer count
+        const hammerCount = document.querySelector('.hammers_count');
+        hammerCount.textContent++;
+
+    }
+    else if (action === 'remove') {
+        playerView.style.backgroundImage = "url('./assets/mainChar_front.png')";
+
+        // decrement hammer count
+        const hammerCount = document.querySelector('.hammers_count');
+        hammerCount.textContent--;
+    }
+}
+
+// this function will add or remove sheild from the player by updating the player's image
+function addRemove_sheild(action) {
+    const playerView = document.getElementById('player');
+
+    if (action === 'add') {
+        playerView.style.backgroundImage = "url('./assets/mainChar_front_sheild.png')";
+
+        // add a 5 seconds timer for the sheild to be active, then remove it
+        setTimeout(function(){
+            // playerView.style.backgroundImage = "url('./assets/mainChar_front.png')";
+            playerCharacterState = "normal";
+        }, 5000);
+
+    }
+    else if (action === 'remove') {
+        playerView.style.backgroundImage = "url('./assets/mainChar_front.png')";
+
+        // decrement sheild count
+        // const sheildCount = document.querySelector('.sheilds_count');
+        // sheildCount.textContent--;
+    }
+}
+
 
 function checkCollisions() {
     const playerRect = player.getBoundingClientRect();
@@ -175,9 +262,23 @@ function checkCollisions() {
         const enemyRect = enemy.getBoundingClientRect();
         // Check collision for player
         if (rectsIntersect(enemyRect, playerRect)) {
-            // Handle collision with player
-            Reset_Player_Position(1);
-            updateLifeCount(1, player_lifeCount--); 
+
+            // if player has hammer, remove emenmy and hammer
+            if (playerCharacterState === "hammer"){
+                enemy.style.display = 'none';
+                addRemove_hammer("remove");
+                playerCharacterState = "normal";
+            }
+            else if (playerCharacterState === "sheild"){
+                // enemy.style.display = 'none';
+                // addRemove_sheild("remove");
+                playerCharacterState = "sheild";
+            }
+            else{
+                // else reset player position and decrement life count
+                Reset_Player_Position(1);
+                updateLifeCount(1, player_lifeCount--);
+            }
         }
     });
 
@@ -208,7 +309,45 @@ function checkCollisions() {
             slowDownEnemies();
         }
     });
+
+    // Check collision for each hammers
+    const hammers = document.querySelectorAll('.hammer');
+    hammers.forEach((hammer) => {
+        const hammerRect = hammer.getBoundingClientRect();
+        if (rectsIntersect(hammerRect, playerRect)) {
+            hammer.style.display = 'none';
+            addRemove_hammer("add");
+            playerCharacterState = "hammer";
+        }
+    });
+
+    // Check collision for each sheilds
+    const sheilds = document.querySelectorAll('.sheild');
+    sheilds.forEach((sheild) => {
+        const sheildRect = sheild.getBoundingClientRect();
+        if (rectsIntersect(sheildRect, playerRect)) {
+            playerCharacterState = "sheild";
+            sheild.style.display = 'none';
+            addRemove_sheild("add");
+        }
+    });
+
+    // Check collision for key
+    const key = document.getElementById('key');
+    const keyRect = key.getBoundingClientRect();
+    if (rectsIntersect(keyRect, playerRect)) {
+        key.style.display = 'none';
+        keyPickedUp = true;
+
+        // display the portal
+        const portal = document.getElementById('portal');
+        portal.style.display = 'block';
+        
+    }
+
 }
+
+
 
 // Collision detection function
 function rectsIntersect(rectA, rectB) {
@@ -254,6 +393,26 @@ function Randomize_ReduceSpeed_Position() {
     });
 }
 
+function Randomize_hammer_Position() {
+    const hammers = document.querySelectorAll('.hammer');
+    const containerRect = valuePack_container.getBoundingClientRect();
+
+    hammers.forEach((hammer) => {
+        hammer.style.top = Math.random() * (containerRect.height - hammer.clientHeight) + "px";
+        hammer.style.left = Math.random() * (containerRect.width - hammer.clientWidth) + "px";
+    });
+}
+
+function Randomize_sheild_Position() {
+    const sheilds = document.querySelectorAll('.sheild');
+    const containerRect = valuePack_container.getBoundingClientRect();
+
+    sheilds.forEach((sheild) => {
+        sheild.style.top = Math.random() * (containerRect.height - sheild.clientHeight) + "px";
+        sheild.style.left = Math.random() * (containerRect.width - sheild.clientWidth) + "px";
+    });
+}
+
 function updateValuePacPositions() {
 
     const containerRect = valuePack_container.getBoundingClientRect();
@@ -286,9 +445,31 @@ function updateReduceSpeedPositions() {
     });
 }
 
+function updateHammerPositions() {
+    const hammers = document.querySelectorAll('.hammer');
+    const containerRect = valuePack_container.getBoundingClientRect();
+
+    hammers.forEach((hammer) => {
+        hammer.style.top = Math.random() * (containerRect.height - hammer.clientHeight) + "px";
+        hammer.style.left = Math.random() * (containerRect.width - hammer.clientWidth) + "px";
+    });
+}
+
+function updateSheildPositions() {
+    const sheilds = document.querySelectorAll('.sheild');
+    const containerRect = valuePack_container.getBoundingClientRect();
+
+    sheilds.forEach((sheild) => {
+        sheild.style.top = Math.random() * (containerRect.height - sheild.clientHeight) + "px";
+        sheild.style.left = Math.random() * (containerRect.width - sheild.clientWidth) + "px";
+    });
+}
+
 setInterval(updateValuePacPositions, 5000); // 5 seconds
 setInterval(updateHeartsPositions, 3000); // 3 seconds
 setInterval(updateReduceSpeedPositions, 7000); // 7 seconds
+setInterval(updateHammerPositions, 10000); // 10 seconds
+setInterval(updateSheildPositions, 15000); // 15 seconds
 
 // Start the game loop
 function Start_Game_Loop() {
@@ -328,11 +509,12 @@ function updateLifeCount(whichPlayer, newLifeCount) {
 }
 
 // ----------------------------- Door & Winning -----------------------------
-function checkDoor() {
-    const player_door = document.getElementById('player_door');
-    const player_door_rect = player_door.getBoundingClientRect();
-    const playerRect = player.getBoundingClientRect();
 
+
+function checkDoor() {
+    const portal = document.getElementById('portal');
+    const portal_rect = portal.getBoundingClientRect();
+    const playerRect = player.getBoundingClientRect();
 }
 
 // -----------------------------TIME LOGIC-----------------------------
@@ -342,6 +524,7 @@ function formatTime(minutes, seconds) {
 }
 
 function Start_Count_Down() {
+    var Time = 0; // Initialize Time to 0
     var timeCountElement = document.getElementById('time_count');
     var countdownTimer = setInterval(function() {
         var minutes = Math.floor(Time / 60);
@@ -352,10 +535,11 @@ function Start_Count_Down() {
             clearInterval(countdownTimer);
             // checkIfLost();
         } else {
-            Time--;
+            Time++;
         }
     }, 1000);
 }
+
 
 // ---------------------------------------PAUSE BUTTON MENU LOGIC-----------------------------------------
 document.addEventListener('DOMContentLoaded', function() {
