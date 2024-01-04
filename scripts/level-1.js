@@ -512,7 +512,19 @@ function checkDoor() {
 
     // if player collides with portal and has key, then go to level 2 "2-level.html"
     if (rectsIntersect(portal_rect, playerRect) && keyPickedUp) {
-        window.location.href = "2-level.html";
+        var game_screen_level1 = document.querySelector('.game_screen_level1');
+        var gameStatus = document.querySelector('.gameStatus');
+
+        game_screen_level1.style.display = 'none';
+        gameStatus.style.display = 'none';
+        
+        var video = document.getElementById('lvl1Tolvl2_video');
+        video.style.display = 'block'; // Show the video
+        video.play();
+
+        video.onended = function() {
+            window.location.href = '2-level.html'; // Redirect after video ends
+        };
     }
 }
 

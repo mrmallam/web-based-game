@@ -653,3 +653,7 @@ video {
     background-image: url("./assets/sheild.png");
     background-size: cover;
 }
+
+#lvl1Tolvl2_video{
+    display: none;
+}
