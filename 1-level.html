@@ -16,6 +16,10 @@
 <body>
 
     <div class="game">
+        <audio autoplay id="main_sound">
+            <source src="./assets/audio/main_menu_theme.wav" type="audio/wav">
+            Your browser does not support the audio element.
+        </audio>
         <div class="gameStatus">                
             <div class="inGame_Menu_button_container">
                 <button class="inGame_Menu_Btn" id="level_inGame_Menu_Btn">PAUSE</button>
@@ -36,15 +40,14 @@
                     <!-- <p id="x">-</p> -->
                     <h3 class="player_lives">7</h3>
                 </div>
-                <div id="score_status">
+                <!-- <div id="score_status">
                     <h3>SCORE: </h3>
                     <h3 class="player_score_count">0</h3>
-                </div>
+                </div> -->
             </div>
             <div class="level_title_container">
                 <h3 class="ftd_style">Level 1</h3>
             </div>
-
         </div>
 
         <div class="game_screen_level1">

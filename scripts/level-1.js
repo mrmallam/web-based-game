@@ -25,6 +25,7 @@ Randomize_ReduceSpeed_Position();
 Randomize_hammer_Position();
 Randomize_sheild_Position();
 
+
 // -----------------------------PLAYER MOVEMENT LOGIC-----------------------------
 function Reset_Player_Position(whichPlayer) {
     if (whichPlayer === 1) {
@@ -142,8 +143,12 @@ function updateGame() {
     checkDoor();
 
     // checkIfLost();
-
     requestAnimationFrame(updateGame);
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var audio = document.getElementById('main_sound');
+        audio.play();
+    });
 }
 
 // Move Enemies
@@ -188,7 +193,7 @@ function slowDownEnemies() {
             originalSpeeds.set(enemy, speed);
         }
 
-        let tempSpeed = speed - 2;
+        let tempSpeed = speed/2;
         enemy.dataset.speed = tempSpeed.toString();
     });
 
@@ -278,6 +283,8 @@ function checkCollisions() {
                 // else reset player position and decrement life count
                 Reset_Player_Position(1);
                 updateLifeCount(1, player_lifeCount--);
+                playerCharacterState = "normal";
+                updatePlayerView(up)
             }
         }
     });

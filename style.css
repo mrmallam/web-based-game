@@ -16,6 +16,10 @@ body {
     padding: 0;
 }
 
+.main_sound{
+    display: none;
+}
+
 
 .game{
     height: 100%; 
@@ -521,7 +525,7 @@ body {
     justify-content: space-between;
     padding: 0.5rem;
     color: black;
-    width: 25rem;
+    width: 15rem;
 }
 .player_stats h3{
     margin: 0 0.5rem;
