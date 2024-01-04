@@ -20,6 +20,10 @@ body {
     display: none;
 }
 
+video {
+    width: 100%;
+    height: auto;
+}
 
 .game{
     height: 100%; 
@@ -138,7 +142,7 @@ body {
     position: absolute;
     bottom: 0;
     width: 60px;
-    height: 80px;
+    height: 85px;
     background-image: url("./assets/mainChar_front.png");
     background-size: 100%;
     background-repeat: no-repeat;

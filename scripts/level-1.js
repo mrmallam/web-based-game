@@ -26,6 +26,11 @@ Randomize_hammer_Position();
 Randomize_sheild_Position();
 
 
+const video = document.querySelector('video');
+
+// Play video
+video.play();
+
 // -----------------------------PLAYER MOVEMENT LOGIC-----------------------------
 function Reset_Player_Position(whichPlayer) {
     if (whichPlayer === 1) {
@@ -145,10 +150,10 @@ function updateGame() {
     // checkIfLost();
     requestAnimationFrame(updateGame);
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var audio = document.getElementById('main_sound');
-        audio.play();
-    });
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     var audio = document.getElementById('main_sound');
+    //     audio.play();
+    // });
 }
 
 // Move Enemies
@@ -244,7 +249,7 @@ function addRemove_sheild(action) {
 
         // add a 5 seconds timer for the sheild to be active, then remove it
         setTimeout(function(){
-            // playerView.style.backgroundImage = "url('./assets/mainChar_front.png')";
+            playerView.style.backgroundImage = "url('./assets/mainChar_front.png')";
             playerCharacterState = "normal";
         }, 5000);
 
@@ -284,17 +289,7 @@ function checkCollisions() {
                 Reset_Player_Position(1);
                 updateLifeCount(1, player_lifeCount--);
                 playerCharacterState = "normal";
-                updatePlayerView(up)
             }
-        }
-    });
-
-    // Check collision for each valuePack/Star
-    valuePack.forEach((valuePac) => {
-        const valuePackRect = valuePac.getBoundingClientRect();
-        if (rectsIntersect(valuePackRect, playerRect)) {
-            valuePac.style.display = 'none';
-            updateScoreCount(1);
         }
     });
 
@@ -501,7 +496,6 @@ function checkIfLost() {
 // ----------------------------- Score and Life Count -----------------------------
 function updateScoreCount(whichPlayer){
     const playerScore = document.querySelector(".player_score_count");
-    // const player2Score = document.querySelector(".player2_score_count");
     if(whichPlayer === 1){
         playerScoreCount += 10;
         playerScore.textContent = playerScoreCount;
@@ -517,11 +511,15 @@ function updateLifeCount(whichPlayer, newLifeCount) {
 
 // ----------------------------- Door & Winning -----------------------------
 
-
 function checkDoor() {
     const portal = document.getElementById('portal');
     const portal_rect = portal.getBoundingClientRect();
     const playerRect = player.getBoundingClientRect();
+
+    // if player collides with portal and has key, then go to level 2 "2-level.html"
+    if (rectsIntersect(portal_rect, playerRect) && keyPickedUp) {
+        window.location.href = "2-level.html";
+    }
 }
 
 // -----------------------------TIME LOGIC-----------------------------

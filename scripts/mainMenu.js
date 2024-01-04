@@ -23,3 +23,18 @@ document.addEventListener('DOMContentLoaded', function() {
         howToPlayContainer.style.display = 'none';
     });
 });
+
+document.getElementById('new_game_button').addEventListener('click', function() {
+    var video = document.getElementById('intro_video');
+    video.style.display = 'block'; // Show the video
+    video.play();
+
+    video.onended = function() {
+        window.location.href = '1-level.html'; // Redirect after video ends
+    };
+});
+
+var video = document.getElementById('intro_video');
+video.addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent any default click behavior
+});
