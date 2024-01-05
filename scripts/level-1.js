@@ -504,7 +504,6 @@ function updateLifeCount(whichPlayer, newLifeCount) {
 }
 
 // ----------------------------- Door & Winning -----------------------------
-
 function checkDoor() {
     const portal = document.getElementById('portal');
     const portal_rect = portal.getBoundingClientRect();
