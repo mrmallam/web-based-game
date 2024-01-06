@@ -56,46 +56,12 @@ video {
 
 .game_screen_level2{
     height: 95%;
-    width: 100%;
     position: relative;
     border: 2px solid black;
     overflow: hidden;
     z-index: -2;
 }
-
 .game_screen_level2::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: -10%;
-    background-image: url("./assets/forest_bg.gif");
-    background-size: cover;
-    z-index: -1;
-
-    background-color: rgba(0, 0, 0, 0.9);
-    mix-blend-mode: multiply;
-}
-.game_screen_level2 .dark-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black */
-    z-index: 0; /* Ensure this is above the background image */
-}
-
-.game_screen_level3{
-    height: 95%;
-    width: 100%;
-    position: relative;
-    border: 2px solid black;
-    overflow: hidden;
-    z-index: -2;
-}
-.game_screen_level3::before {
     content: '';
     position: absolute;
     top: 0;
@@ -106,14 +72,14 @@ video {
     background-size: cover;
     z-index: -1;
 }
-.game_screen_level3 .dark-overlay {
+.game_screen_level2 .dark-overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black */
-    z-index: 0; /* Ensure this is above the background image */
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 0;
 }
 
 
@@ -139,7 +105,6 @@ video {
 
 #player {
     position: absolute;
-    bottom: 0;
     width: 60px;
     height: 85px;
     background-image: url("./assets/mainChar_front.png");
@@ -174,7 +139,7 @@ video {
     height: 5%;
     text-align: center;
     background-color: #B59F84;
-    border: 2px solid black;
+    /* border: 2px solid black; */
     overflow: auto;
     width: 100vw;
 }
@@ -617,6 +582,18 @@ video {
     background-size: cover;
 }
 
+.heart2{
+    display: block;
+    position: absolute;
+    z-index: 0;
+    top: 250px;
+    left: 1060px;
+    width: 40px;
+    height: 35px;
+    background-image: url("./assets/heart.png");
+    background-size: cover;
+}
+
 .reduceSpeed{
     display: block;
     position: absolute;
@@ -652,7 +629,165 @@ video {
     background-image: url("./assets/sheild.png");
     background-size: cover;
 }
+.sheild2{
+    display: block;
+    position: absolute;
+    z-index: 0;
+    top: 350px;
+    left: 1070px;
+    width: 35px;
+    height: 40px;
+    background-image: url("./assets/sheild.png");
+    background-size: cover;
+}
+
 
 #lvl1Tolvl2_video{
     display: none;
+}
+
+
+/* ----------------------- Level 2 stuff ----------------------- */
+
+#game-container {
+    position: relative;
+    /* width: 100%; 
+    height: 100%;  */
+    /* background-color: yellow;  */
+}
+
+.wall {
+    position: absolute;
+    background-color: #444; /* Wall color */
+    /* Add additional styling as needed */
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Position each wall */
+#left_outer {
+    width: 20px; /* Wall width */
+    height: 550px; /* Wall height */
+    top: 100px; 
+    left: 100px; 
+}
+#bottom_outer {
+    width: 1230px;
+    height: 20px;
+    top: 650px;
+    left: 100px;
+}
+#right_outer {
+    width: 20px;
+    height: 437px;
+    top: 100px;
+    left: 1310px;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+#top_outer_left {
+    width: 320px;
+    height: 20px;
+    top: 100px;
+    left: 300px;
+}
+#top_outer_right {
+    width: 530px;
+    height: 20px;
+    top: 100px;
+    left: 800px;
+}
+#inner_left {
+    width: 20px;
+    height: 310px;
+    top: 230px;
+    left: 1140px;
+}
+#inner_right {
+    width: 20px;
+    height: 310px;
+    top: 230px;
+    left: 1000px;
+}
+  
+#ad {
+    width: 300px;
+    height: 300px;
+    top: 225px;
+    left: 300px;
+    background-image: url("https://media.giphy.com/media/xT0Gqh1h62wF5HGt6o/giphy.gif");
+    background-size: cover;
+    border: 10px solid rgba(68, 68, 68);
+}
+
+
+.taxis, .taxis_vertical{
+    width: 110px;
+    height: 50px;
+}
+
+#taxi1 {
+    position: absolute;
+    animation: moveHorizontally 5s linear infinite;
+    top: 17px;
+    background-image: url("./assets/taxi.png");
+    background-size: cover;
+}
+
+#taxi2 {
+    position: absolute;
+    animation: moveHorizontally 5s linear infinite;
+    top: 700px;
+    background-image: url("./assets/taxi.png");
+    background-size: cover;
+}
+
+#taxi3 {
+    position: absolute;
+    width: 50px;
+    height: 100px;
+    top: 85px;
+    left: 700px;
+    background-image: url("./assets/taxi_upwards.png");
+    background-size: cover;
+}
+
+#taxi4 {
+    position: absolute;
+    top: 600px;
+    left: 1000px;
+    background-image: url("./assets/taxi_downwards.png");
+    background-size: cover;
+} */
+
+#key1{
+    position: absolute;
+    width: 50px;
+    height: 100px;
+    background-image: url("./assets/key.png");
+    background-size: cover;
+    top: 20px;
+    left: 20px;
+}
+#key2{
+    display: none;
+    position: absolute;
+    width: 50px;
+    height: 100px;
+    background-image: url("./assets/key.png");
+    background-size: cover;
+    top: 20px;
+    left: 1350px;
+}
+
+#portal_lvl2{
+    display: none;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-image: url("./assets/portal.png");
+    background-size: cover;
+    top: 350px;
 }

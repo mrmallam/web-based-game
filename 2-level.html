@@ -16,6 +16,7 @@
 <body>
 
     <div class="game">
+     
         <div class="gameStatus">                
             <div class="inGame_Menu_button_container">
                 <button class="inGame_Menu_Btn" id="level_inGame_Menu_Btn">PAUSE</button>
@@ -28,49 +29,53 @@
 
             <div class="player_stats">
                 <div id="lifes_status">
-                    <h3>LIVES: </h3>
-                    <h3 class="player_lives" style="color: red;">7</h3>
+                    <div id="hammer"></div>
+                    <h3 class="hammers_count">0</h3>
                 </div>
-                <div id="score_status">
+                <div id="lifes_status">
+                    <div id="lifes"></div>
+                    <!-- <p id="x">-</p> -->
+                    <h3 class="player_lives">7</h3>
+                </div>
+                <!-- <div id="score_status">
                     <h3>SCORE: </h3>
-                    <h3 class="player_score_count" style="color: red;">0</h3>
-                </div>
+                    <h3 class="player_score_count">0</h3>
+                </div> -->
             </div>
             <div class="level_title_container">
                 <h3 class="ftd_style">Level 2</h3>
             </div>
-
         </div>
 
         <div class="game_screen_level2">
             <div class="dark-overlay"></div>
             
             <div id="player"></div>
+            <div id="key1"></div>
+            <div id="key2"></div>
+            <div id="portal_lvl2"></div>
 
-            <div id="player_door"></div>
 
-            <div class="enemies_container">
-                <div class="enemy"></div>
-                <div class="enemy"></div>
-                <div class="enemy"></div>
-                <div class="enemy"></div>
-                <div class="enemy"></div>
-                <div class="enemy"></div>
-                <div class="enemy"></div>
-                <div class="enemy"></div>
+            <div id="game-container">
+                <div class="wall" id="left_outer"></div>
+                <div class="wall" id="bottom_outer"></div>
+                <div class="wall" id="right_outer"></div>
+                <div class="wall" id="top_outer_left"></div>
+                <div class="wall" id="top_outer_right"></div>
+                <div class="wall" id="inner_left"></div>
+                <div class="wall" id="inner_right"></div>
+                <div class="wall" id="ad"></div>
             </div>
 
-            <div class="hearts_container">
-                <div class="heart"></div>
-                <div class="heart"></div>
-                <div class="heart"></div>
-                <div class="heart"></div>
+            <div class="taxis" id="taxi1"></div>
+            <div class="taxis" id="taxi2"></div>
+            <div class="taxis" id="taxi4"></div>
+            <div class="taxis_vertical" id="taxi3"></div>
 
-                <!-- <div class="valuePack"></div>
-                <div class="valuePack"></div>
-                <div class="valuePack"></div>
-                <div class="valuePack"></div> -->
-            </div>
+            <div class="heart2"></div>
+
+            <div class="sheild2"></div>
+
         </div>
 
         <div class="loose_menu_container">
@@ -124,6 +129,6 @@
             </div>
         </div>
     </div>
-    <script src="scripts/level-1.js"></script>
+    <script src="scripts/level-2.js"></script>
 </body>
 </html>
