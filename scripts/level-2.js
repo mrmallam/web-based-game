@@ -9,7 +9,7 @@ const valuePack_container = document.querySelector('.valuepacks_container');
 const player_speed = 30; // 50px per keypress
 let player_vertical = player.getBoundingClientRect().top;
 let player_horizontal = player.getBoundingClientRect().left;
-let player_lifeCount = 10;
+// let player_lifeCount = 10;
 let Time = 120; // 2 minutes in seconds
 let playerScoreCount = 0;
 let playerCharacterState = "normal";
@@ -18,6 +18,9 @@ var player_lifeCountElement = document.querySelector('.player_lives');
 
 let gameState = true;
 
+
+var heartsfromlvl1 = localStorage.getItem("heartslvl1");
+let player_lifeCount = parseInt(heartsfromlvl1, 10);
 
 var sheild = new Audio('./assets/audio/sheild.wav');
 var key = new Audio('./assets/audio/key.wav');
@@ -347,6 +350,20 @@ function checkCollisions() {
             }
         }
     });
+
+    // check collision for the vertical taxi
+    const vertical_taxis = document.querySelector(".taxis_vertical");
+    const vertical_taxiRect = vertical_taxis.getBoundingClientRect();
+    if (rectsIntersect(vertical_taxiRect, playerRect)) {
+        playSound('obstacleHit');
+        if(playerCharacterState != "sheild"){
+            Reset_Player_Position();
+            player_lifeCount = player_lifeCount - 1;
+            updateLifeCount(player_lifeCount);
+            checkIfLost();
+        }
+    }
+
 
     // Check collision for each heart
     hearts.forEach((valuePac) => {

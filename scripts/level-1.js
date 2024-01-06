@@ -17,6 +17,12 @@ let playerCharacterState = "normal";
 let keyPickedUp = false;
 var player_lifeCountElement = document.querySelector('.player_lives');
 let gameState = true;
+let soundPlayed = false;
+
+
+
+
+var level1Music = new Audio('./assets/audio/Level_1.wav');
 
 var hammer = new Audio('./assets/audio/hammer.wav');
 var sheild = new Audio('./assets/audio/sheild.wav');
@@ -24,6 +30,10 @@ var key = new Audio('./assets/audio/key.wav');
 var heart = new Audio('./assets/audio/heart.wav');
 var obstacleHit = new Audio('./assets/audio/obsticleHit.wav');
 var timerSound = new Audio('./assets/audio/timerSound.wav');
+
+while (gameState === true && soundPlayed === true){
+    level1Music.play();
+}
 
 function playSound(effect) {
     if (!gameState){
@@ -127,15 +137,18 @@ function updatePlayerView(direction) {
 }
 
 document.getElementById('muteButton').addEventListener('click', function() {
-    var audio = document.getElementById('main_sound');
     var icon = document.getElementById('audioIcon');
-    if (audio.paused) {
-        audio.play();
+    if (level1Music.paused) {
+        soundPlayed = true;
+        level1Music.play();
         icon.src = 'https://img.icons8.com/ios-filled/50/high-volume--v1.png';
     } else {
-        audio.muted = !audio.muted;
-        icon.src = audio.muted ? 'https://img.icons8.com/ios-filled/50/no-audio--v1.png' : 'https://img.icons8.com/ios-filled/50/high-volume--v1.png';
+        soundPlayed = false;
+        level1Music.muted = !level1Music.muted;
+        icon.src = level1Music.muted ? 'https://img.icons8.com/ios-filled/50/no-audio--v1.png' : 'https://img.icons8.com/ios-filled/50/high-volume--v1.png';
     }
+
+
 });
 
 
@@ -183,6 +196,9 @@ document.addEventListener('keydown', function(event) {
 // ----------------------------- Game Loop/Bullets/Collision Detection -----------------------------`
 // Game loop function
 function updateGame() {
+    if (!gameState) {
+        return;
+    }
     moveEnemies();
 
     checkCollisions();
@@ -560,8 +576,8 @@ function updateScoreCount(whichPlayer){
 }
 
 function updateLifeCount(newLifeCount) {
-    player_lifeCountElement.textContent = newLifeCount;
-    
+    player_lifeCount = newLifeCount;
+    player_lifeCountElement.textContent = player_lifeCount;
 }
 
 // ----------------------------- Door & Winning -----------------------------
@@ -574,6 +590,7 @@ function checkPortal() {
     // if player collides with portal and has key, then go to level 2 "2-level.html"
     if (rectsIntersect(portal_rect, playerRect) && keyPickedUp) {
 
+
         gameState = false;
         var game_screen_level1 = document.querySelector('.game_screen_level1');
         var gameStatus = document.querySelector('.gameStatus');
@@ -584,15 +601,17 @@ function checkPortal() {
         gameStatus.style.display = 'none';
         otherscreen.style.display = 'none';
 
-        var audio = document.getElementById('main_sound');
-        audio.pause();
+        level1Music.pause();
         
         var video = document.getElementById('lvl1Tolvl2_video');
         video.style.display = 'block'; // Show the video
         video.play();
 
+
+
         video.onended = function() {
-            window.location.href = '2-level.html'; // Redirect after video ends
+            localStorage.setItem("heartslvl1", player_lifeCount);
+            window.location.href = `./2-level.html`; // Redirect after video ends
         };
     }
 }

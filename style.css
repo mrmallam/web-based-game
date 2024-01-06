@@ -821,11 +821,11 @@ video {
     display: none;
     position: absolute;
     width: 50px;
-    height: 100px;
+    height: 90px;
     background-image: url("./assets/key.png");
     background-size: cover;
-    top: 20px;
-    left: 1350px;
+    top: 550px;
+    left: 710px;
 }
 
 #portal_lvl2{
