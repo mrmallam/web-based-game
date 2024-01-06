@@ -15,6 +15,8 @@ let Time = 120; // 2 minutes in seconds
 let playerScoreCount = 0;
 let playerCharacterState = "normal";
 let keyPickedUp = false;
+var player_lifeCountElement = document.querySelector('.player_lives');
+
 
 Start_Game_Loop();
 Start_Count_Down();
@@ -24,6 +26,7 @@ Randomize_Hearts_Position();
 Randomize_ReduceSpeed_Position();
 Randomize_hammer_Position();
 Randomize_sheild_Position();
+player_lifeCountElement.textContent = player_lifeCount;
 
 // -----------------------------PLAYER MOVEMENT LOGIC-----------------------------
 function Reset_Player_Position(whichPlayer) {
@@ -498,7 +501,6 @@ function updateScoreCount(whichPlayer){
 
 function updateLifeCount(whichPlayer, newLifeCount) {
 
-    var player_lifeCountElement = document.querySelector('.player_lives');
     player_lifeCountElement.textContent = newLifeCount;
     
 }
@@ -513,9 +515,11 @@ function checkDoor() {
     if (rectsIntersect(portal_rect, playerRect) && keyPickedUp) {
         var game_screen_level1 = document.querySelector('.game_screen_level1');
         var gameStatus = document.querySelector('.gameStatus');
+        var otherscreen = document.getElementById('pause_menu_container');
 
         game_screen_level1.style.display = 'none';
         gameStatus.style.display = 'none';
+        otherscreen.style.display = 'none';
         
         var video = document.getElementById('lvl1Tolvl2_video');
         video.style.display = 'block'; // Show the video

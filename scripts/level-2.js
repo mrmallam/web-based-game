@@ -14,6 +14,7 @@ let Time = 120; // 2 minutes in seconds
 let playerScoreCount = 0;
 let playerCharacterState = "normal";
 let keyPickedUp = false;
+var player_lifeCountElement = document.querySelector('.player_lives');
 
 Start_Game_Loop();
 Start_Count_Down();
@@ -23,21 +24,16 @@ Reset_Player_Position();
 // Randomize_ReduceSpeed_Position();
 // Randomize_hammer_Position();
 // Randomize_sheild_Position();
+player_lifeCountElement.textContent = player_lifeCount;
+
 
 // -----------------------------PLAYER MOVEMENT LOGIC-----------------------------
 function Reset_Player_Position() {
-
-
     player.style.top = '400px';
     player.style.left = '1350px';
 
-
     player_vertical = 400;
     player_horizontal = 1350;
-
-    // player_vertical = initial_player_vertical;
-    // player_horizontal = initial_player_horizontal;
-    
 }
 
 // Player movement
@@ -377,7 +373,9 @@ function checkCollisions() {
         // Check collision for player
         if (rectsIntersect(taxiRect, playerRect)) {
 
-            Reset_Player_Position();
+            if(playerCharacterState != "sheild"){
+                Reset_Player_Position();
+            }
         }
     });
 
@@ -483,7 +481,6 @@ function updateScoreCount(whichPlayer){
 }
 
 function updateLifeCount(newLifeCount) {
-    var player_lifeCountElement = document.querySelector('.player_lives');
     player_lifeCountElement.textContent = newLifeCount;
     
 }
