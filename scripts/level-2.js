@@ -9,7 +9,7 @@ const valuePack_container = document.querySelector('.valuepacks_container');
 const player_speed = 30; // 50px per keypress
 let player_vertical = player.getBoundingClientRect().top;
 let player_horizontal = player.getBoundingClientRect().left;
-let player_lifeCount = 1;
+let player_lifeCount = 10;
 let Time = 120; // 2 minutes in seconds
 let playerScoreCount = 0;
 let playerCharacterState = "normal";
@@ -178,10 +178,6 @@ function updateGame() {
     checkIfLost();
     requestAnimationFrame(updateGame);
 
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     var audio = document.getElementById('main_sound');
-    //     audio.play();
-    // });
 }
 
 // Move Enemies
@@ -337,27 +333,6 @@ function checkCollisions() {
         }
     });
 
-    // // Check collision for each reduceSpeed
-    // const reduceSpeed = document.querySelectorAll('.reduceSpeed');
-    // reduceSpeed.forEach((valuePac) => {
-    //     const reduceSpeedRect = valuePac.getBoundingClientRect();
-    //     if (rectsIntersect(reduceSpeedRect, playerRect)) {
-    //         valuePac.style.display = 'none';
-    //         slowDownEnemies();
-    //     }
-    // });
-
-    // // Check collision for each hammers
-    // const hammers = document.querySelectorAll('.hammer');
-    // hammers.forEach((hammer) => {
-    //     const hammerRect = hammer.getBoundingClientRect();
-    //     if (rectsIntersect(hammerRect, playerRect)) {
-    //         hammer.style.display = 'none';
-    //         addRemove_hammer("add");
-    //         playerCharacterState = "hammer";
-    //     }
-    // });
-
     // Check collision for each sheilds
     const sheilds = document.querySelectorAll('.sheild2');
     sheilds.forEach((sheild) => {
@@ -388,7 +363,39 @@ function checkCollisions() {
         // display portal
         portal_lvl2.style.display = 'block';
     }
+
+
+    // Check collision for portal
+    const portalRect = portal_lvl2.getBoundingClientRect();
+    if (rectsIntersect(portalRect, playerRect)) {
+        
+        // call function to display final video
+        displayFinalVideo();
+    }
 }
+
+function displayFinalVideo() {
+    gameState = false;
+    const finalVideo = document.getElementById('final_video');
+    const main_sound = document.getElementById('main_sound');
+    const gameStatus = document.querySelector('.gameStatus');
+    const game_screen_level2 = document.querySelector('.game_screen_level2')
+
+    finalVideo.style.display = 'flex';
+    main_sound.pause();
+    gameStatus.style.display = 'none';
+    game_screen_level2.display = 'none';
+
+    // play final video 
+    finalVideo.play();
+
+    finalVideo.onended = function() {
+        window.location.href = 'index.html'; // redirect to home page
+    };
+}
+
+
+
 
 // Collision detection function
 function rectsIntersect(rectA, rectB) {
@@ -413,7 +420,6 @@ function checkIfLost() {
         const game_screen_level2 = document.querySelector('.game_screen_level2')
         game_screen_level2.style.filter = 'blur(10px)';
         gameState = false;
-
     }
 }
 

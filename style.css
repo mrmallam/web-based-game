@@ -688,6 +688,10 @@ video {
     display: none;
 }
 
+#final_video{
+    display: none;
+}
+
 
 /* ----------------------- Level 2 stuff ----------------------- */
 
