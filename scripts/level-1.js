@@ -10,13 +10,47 @@ const valuePack_container = document.querySelector('.valuepacks_container');
 const player_speed = 50; // 50px per keypress
 let player_vertical = player.getBoundingClientRect().top;
 let player_horizontal = player.getBoundingClientRect().left;
-let player_lifeCount = 1;
+let player_lifeCount = 5;
 let Time = 120; // 2 minutes in seconds
 let playerScoreCount = 0;
 let playerCharacterState = "normal";
 let keyPickedUp = false;
 var player_lifeCountElement = document.querySelector('.player_lives');
 let gameState = true;
+
+var hammer = new Audio('./assets/audio/hammer.wav');
+var sheild = new Audio('./assets/audio/sheild.wav');
+var key = new Audio('./assets/audio/key.wav');
+var heart = new Audio('./assets/audio/heart.wav');
+var obstacleHit = new Audio('./assets/audio/obsticleHit.wav');
+var timerSound = new Audio('./assets/audio/timerSound.wav');
+
+function playSound(effect) {
+    if (!gameState){
+        return;
+    }
+    switch(effect) {
+        case 'hammer':
+            hammer.play();
+            break;
+        case 'sheild':
+            sheild.play();
+            break;
+        case 'key':
+            key.play();
+            break;
+        case 'heart':
+            heart.play();
+            break;
+        case 'obstacleHit':
+            obstacleHit.play();
+            break;
+        case 'timerSound':
+            timerSound.play();
+            break;
+    }
+}
+
 
 Start_Game_Loop();
 Start_Count_Down();
@@ -298,6 +332,7 @@ function checkCollisions() {
                 player_lifeCount = player_lifeCount - 1;
                 updateLifeCount(player_lifeCount);
                 playerCharacterState = "normal";
+                playSound('obstacleHit');
             }
         }
     });
@@ -309,6 +344,7 @@ function checkCollisions() {
             valuePac.style.display = 'none';
             player_lifeCount = player_lifeCount + 1;
             updateLifeCount(player_lifeCount);
+            playSound('heart');
         }
     });
 
@@ -317,6 +353,7 @@ function checkCollisions() {
     reduceSpeed.forEach((valuePac) => {
         const reduceSpeedRect = valuePac.getBoundingClientRect();
         if (rectsIntersect(reduceSpeedRect, playerRect)) {
+            playSound("timerSound");
             valuePac.style.display = 'none';
             slowDownEnemies();
         }
@@ -330,6 +367,7 @@ function checkCollisions() {
             hammer.style.display = 'none';
             addRemove_hammer("add");
             playerCharacterState = "hammer";
+            playSound("hammer");
         }
     });
 
@@ -341,6 +379,7 @@ function checkCollisions() {
             playerCharacterState = "sheild";
             sheild.style.display = 'none';
             addRemove_sheild("add");
+            playSound("sheild");
         }
     });
 
@@ -354,12 +393,11 @@ function checkCollisions() {
         // display the portal
         const portal = document.getElementById('portal');
         portal.style.display = 'block';
+        playSound("key");
         
     }
 
 }
-
-
 
 // Collision detection function
 function rectsIntersect(rectA, rectB) {
@@ -535,6 +573,8 @@ function checkPortal() {
 
     // if player collides with portal and has key, then go to level 2 "2-level.html"
     if (rectsIntersect(portal_rect, playerRect) && keyPickedUp) {
+
+        gameState = false;
         var game_screen_level1 = document.querySelector('.game_screen_level1');
         var gameStatus = document.querySelector('.gameStatus');
         var otherscreen = document.getElementById('pause_menu_container');

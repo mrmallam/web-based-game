@@ -18,6 +18,32 @@ var player_lifeCountElement = document.querySelector('.player_lives');
 
 let gameState = true;
 
+
+var sheild = new Audio('./assets/audio/sheild.wav');
+var key = new Audio('./assets/audio/key.wav');
+var heart = new Audio('./assets/audio/heart.wav');
+var obstacleHit = new Audio('./assets/audio/obsticleHit.wav');
+
+function playSound(effect) {
+    if (!gameState){
+        return;
+    }
+    switch(effect) {
+        case 'sheild':
+            sheild.play();
+            break;
+        case 'key':
+            key.play();
+            break;
+        case 'heart':
+            heart.play();
+            break;
+        case 'obstacleHit':
+            obstacleHit.play();
+            break;
+    }
+}
+
 Start_Game_Loop();
 Start_Count_Down();
 Reset_Player_Position();
@@ -304,7 +330,6 @@ function addRemove_sheild(action) {
     }
 }
 
-
 function checkCollisions() {
     const playerRect = player.getBoundingClientRect();
     
@@ -313,7 +338,7 @@ function checkCollisions() {
         const taxiRect = taxi.getBoundingClientRect();
         // Check collision for player
         if (rectsIntersect(taxiRect, playerRect)) {
-
+            playSound('obstacleHit');
             if(playerCharacterState != "sheild"){
                 Reset_Player_Position();
                 player_lifeCount = player_lifeCount - 1;
@@ -327,6 +352,7 @@ function checkCollisions() {
     hearts.forEach((valuePac) => {
         const heartsRect = valuePac.getBoundingClientRect();
         if (rectsIntersect(heartsRect, playerRect)) {
+            playSound('heart');
             valuePac.style.display = 'none';
             player_lifeCount = player_lifeCount + 1;
             updateLifeCount(player_lifeCount);
@@ -336,8 +362,10 @@ function checkCollisions() {
     // Check collision for each sheilds
     const sheilds = document.querySelectorAll('.sheild2');
     sheilds.forEach((sheild) => {
+
         const sheildRect = sheild.getBoundingClientRect();
         if (rectsIntersect(sheildRect, playerRect)) {
+            playSound('sheild');
             playerCharacterState = "sheild";
             sheild.style.display = 'none';
             addRemove_sheild("add");
@@ -353,17 +381,18 @@ function checkCollisions() {
     const key2Rect = key2.getBoundingClientRect();
 
     if (rectsIntersect(key1Rect, playerRect)) {
+        playSound('key');
         key1.style.display = 'none';
         key2.style.display = 'block';
 
     }
     if (rectsIntersect(key2Rect, playerRect)) {
+        playSound('key');
         key2.style.display = 'none';
 
         // display portal
         portal_lvl2.style.display = 'block';
     }
-
 
     // Check collision for portal
     const portalRect = portal_lvl2.getBoundingClientRect();
