@@ -9,23 +9,20 @@ const valuePack_container = document.querySelector('.valuepacks_container');
 const player_speed = 30; // 50px per keypress
 let player_vertical = player.getBoundingClientRect().top;
 let player_horizontal = player.getBoundingClientRect().left;
-let player_lifeCount = 6;
+let player_lifeCount = 1;
 let Time = 120; // 2 minutes in seconds
 let playerScoreCount = 0;
 let playerCharacterState = "normal";
 let keyPickedUp = false;
 var player_lifeCountElement = document.querySelector('.player_lives');
 
+let gameState = true;
+
 Start_Game_Loop();
 Start_Count_Down();
 Reset_Player_Position();
-// Randomize_ValuePack_Position();
-// Randomize_Hearts_Position();
-// Randomize_ReduceSpeed_Position();
-// Randomize_hammer_Position();
-// Randomize_sheild_Position();
-player_lifeCountElement.textContent = player_lifeCount;
 
+player_lifeCountElement.textContent = player_lifeCount;
 
 // -----------------------------PLAYER MOVEMENT LOGIC-----------------------------
 function Reset_Player_Position() {
@@ -36,8 +33,19 @@ function Reset_Player_Position() {
     player_horizontal = 1350;
 }
 
-// Player movement
+document.getElementById('muteButton').addEventListener('click', function() {
+    var audio = document.getElementById('main_sound');
+    var icon = document.getElementById('audioIcon');
+    if (audio.paused) {
+        audio.play();
+        icon.src = 'https://img.icons8.com/ios-filled/50/high-volume--v1.png';
+    } else {
+        audio.muted = !audio.muted;
+        icon.src = audio.muted ? 'https://img.icons8.com/ios-filled/50/no-audio--v1.png' : 'https://img.icons8.com/ios-filled/50/high-volume--v1.png';
+    }
+});
 
+// Player movement
 function updatePlayerView(direction) {
     const playerView = document.getElementById('player');
 
@@ -57,22 +65,6 @@ function updatePlayerView(direction) {
                 break;
         }
     }
-    // else if (playerCharacterState === "hammer"){
-    //     switch(direction) {
-    //         case 'up':
-    //             playerView.style.backgroundImage = "url('./assets/mainChar_front_hammer.png')";
-    //             break;
-    //         case 'down':
-    //             playerView.style.backgroundImage = "url('./assets/mainChar_front_hammer.png')";
-    //             break;
-    //         case 'left':
-    //             playerView.style.backgroundImage = "url('./assets/mainChar_left_hammer.png')";
-    //             break;
-    //         case 'right':
-    //             playerView.style.backgroundImage = "url('./assets/mainChar_right_hammer.png')";
-    //             break;
-    //     }
-    // }
     else if (playerCharacterState === "sheild"){
         switch(direction) {
             case 'up':
@@ -92,8 +84,7 @@ function updatePlayerView(direction) {
 }
 
 
-
-// Assuming you have the player's vertical (top) and horizontal (left) position variables
+// -----------------------------WALL COLLISION LOGIC-----------------------------
 
 const walls = document.querySelectorAll('.wall'); // Select all walls
 
@@ -119,6 +110,10 @@ document.addEventListener('keydown', function(event) {
     let new_player_vertical = player_vertical;
     let new_player_horizontal = player_horizontal;
 
+
+    if (!gameState) {
+        return;
+    }
     // Move player
     switch(event.key) {
         case 'ArrowUp':
@@ -171,14 +166,16 @@ document.addEventListener('keydown', function(event) {
 // ----------------------------- Game Loop/Bullets/Collision Detection -----------------------------`
 // Game loop function
 function updateGame() {
+    if (!gameState) {
+        return;
+    }
+
     moveTaxis_vertical();
     moveTaxis_horizontal();
 
     checkCollisions();
 
-    // checkDoor();
-
-    // checkIfLost();
+    checkIfLost();
     requestAnimationFrame(updateGame);
 
     // document.addEventListener('DOMContentLoaded', function() {
@@ -288,58 +285,6 @@ vertical_taxi.forEach((taxi) => {
 // Store original speeds of enemies
 let originalSpeeds = new Map();
 
-// Slow down enemies
-// function slowDownEnemies() {
-//     enemies.forEach((enemy) => {
-//         let speed = parseFloat(enemy.dataset.speed);
-
-//         // Store original speed if not already stored
-//         if (!originalSpeeds.has(enemy)) {
-//             originalSpeeds.set(enemy, speed);
-//         }
-
-//         let tempSpeed = speed/2;
-//         enemy.dataset.speed = tempSpeed.toString();
-//     });
-
-//     // Restore original speeds after 5 seconds
-//     setTimeout(restoreSpeeds, 5000);
-// }
-
-// Restore the original speeds of the enemies
-// function restoreSpeeds() {
-//     enemies.forEach((enemy) => {
-//         if (originalSpeeds.has(enemy)) {
-//             enemy.dataset.speed = originalSpeeds.get(enemy).toString();
-//         }
-//     });
-
-//     // Clear the original speeds
-//     originalSpeeds.clear();
-// }
-
-
-// this function will add or remove hammer from the player by updating the player's image
-// function addRemove_hammer(action) {
-//     const playerView = document.getElementById('player');
-
-//     if (action === 'add') {
-//         playerView.style.backgroundImage = "url('./assets/mainChar_front_hammer.png')";
-
-//         // increment hammer count
-//         const hammerCount = document.querySelector('.hammers_count');
-//         hammerCount.textContent++;
-
-//     }
-//     else if (action === 'remove') {
-//         playerView.style.backgroundImage = "url('./assets/mainChar_front.png')";
-
-//         // decrement hammer count
-//         const hammerCount = document.querySelector('.hammers_count');
-//         hammerCount.textContent--;
-//     }
-// }
-
 // this function will add or remove sheild from the player by updating the player's image
 function addRemove_sheild(action) {
     const playerView = document.getElementById('player');
@@ -375,6 +320,9 @@ function checkCollisions() {
 
             if(playerCharacterState != "sheild"){
                 Reset_Player_Position();
+                player_lifeCount = player_lifeCount - 1;
+                updateLifeCount(player_lifeCount);
+                checkIfLost();
             }
         }
     });
@@ -458,16 +406,14 @@ function Start_Game_Loop() {
 
 // ----------------------------- Check loosing condition -----------------------------
 function checkIfLost() {
-    const youLost_menu = document.querySelector('.loose_menu_container');
-    const whichPlayerLost = document.getElementById("whichPlayerLost");
+    const youLost_menu = document.querySelector('.loose_container');
 
-    if (player_lifeCount < 0) {
+    if (player_lifeCount <= 0) {
         youLost_menu.style.display = 'flex';
-        whichPlayerLost.innerText = "You LOST!!!!"
-    }
-    else if (Time < -1){
-        youLost_menu.style.display = 'flex';
-        whichPlayerLost.innerText = "Losers. Both of you."
+        const game_screen_level2 = document.querySelector('.game_screen_level2')
+        game_screen_level2.style.filter = 'blur(10px)';
+        gameState = false;
+
     }
 }
 
@@ -495,16 +441,10 @@ function Start_Count_Down() {
     var Time = 0; // Initialize Time to 0
     var timeCountElement = document.getElementById('time_count');
     var countdownTimer = setInterval(function() {
+        Time++; // Increment Time by 1
         var minutes = Math.floor(Time / 60);
         var seconds = Time % 60;
         timeCountElement.textContent = formatTime(minutes, seconds);
-
-        if (Time === -2) {
-            clearInterval(countdownTimer);
-            // checkIfLost();
-        } else {
-            Time++;
-        }
     }, 1000);
 }
 

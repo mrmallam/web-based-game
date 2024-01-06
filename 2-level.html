@@ -16,11 +16,19 @@
 <body>
 
     <div class="game">
+        <audio autoplay id="main_sound">
+            <source src="./assets/audio/Level_1.wav" type="audio/wav">
+            Your browser does not support the audio element.
+        </audio>
      
         <div class="gameStatus">                
             <div class="inGame_Menu_button_container">
                 <button class="inGame_Menu_Btn" id="level_inGame_Menu_Btn">PAUSE</button>
             </div>
+
+            <button id="muteButton" style="background-color: transparent; border: none;">
+                <img id="audioIcon" src="https://img.icons8.com/ios-filled/50/high-volume--v1.png" style="width: 30px; height: 30px;">
+            </button>
 
             <div id="time_status" class="ftd_style">
                 <h3>TIME: </h3>
@@ -43,7 +51,7 @@
         </div>
 
         <div class="game_screen_level2">
-            <div class="dark-overlay"></div>
+            <!-- <div class="dark-overlay"></div> -->
             
             <div id="player"></div>
             <div id="key1"></div>
@@ -76,9 +84,9 @@
 
         </div>
 
-        <div class="loose_menu_container">
+        <div class="loose_container">
             <div class="loose_container_buttons">
-                <h1 id="whichPlayerLost">YOU LOST!</h1>
+                <h1>YOU LOST!</h1>
                 <a href="1-level.html"><button id ="win_button_menu" class="menu_item_button">PLAY AGAIN</button></a>
                 <a href="index.html"><button id ="win_button_menu" class="menu_item_button">MAIN MENU</button></a>
             </div>

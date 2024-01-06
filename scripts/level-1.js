@@ -10,17 +10,17 @@ const valuePack_container = document.querySelector('.valuepacks_container');
 const player_speed = 50; // 50px per keypress
 let player_vertical = player.getBoundingClientRect().top;
 let player_horizontal = player.getBoundingClientRect().left;
-let player_lifeCount = 6;
+let player_lifeCount = 1;
 let Time = 120; // 2 minutes in seconds
 let playerScoreCount = 0;
 let playerCharacterState = "normal";
 let keyPickedUp = false;
 var player_lifeCountElement = document.querySelector('.player_lives');
-
+let gameState = true;
 
 Start_Game_Loop();
 Start_Count_Down();
-Reset_Player_Position(1);
+Reset_Player_Position();
 Randomize_ValuePack_Position();
 Randomize_Hearts_Position();
 Randomize_ReduceSpeed_Position();
@@ -29,17 +29,12 @@ Randomize_sheild_Position();
 player_lifeCountElement.textContent = player_lifeCount;
 
 // -----------------------------PLAYER MOVEMENT LOGIC-----------------------------
-function Reset_Player_Position(whichPlayer) {
-    if (whichPlayer === 1) {
-        player.style.top = '';
-        player.style.left = '';
+function Reset_Player_Position() {
+    player.style.top = '400px';
+    player.style.left = '1350px';
 
-        player.style.bottom = '0px';
-        player.style.right = '0px';
-
-        player_vertical = initial_player_vertical;
-        player_horizontal = initial_player_horizontal;
-    }
+    player_vertical = 400;
+    player_horizontal = 1350;
 }
 
 // Player movement
@@ -97,12 +92,29 @@ function updatePlayerView(direction) {
     }
 }
 
+document.getElementById('muteButton').addEventListener('click', function() {
+    var audio = document.getElementById('main_sound');
+    var icon = document.getElementById('audioIcon');
+    if (audio.paused) {
+        audio.play();
+        icon.src = 'https://img.icons8.com/ios-filled/50/high-volume--v1.png';
+    } else {
+        audio.muted = !audio.muted;
+        icon.src = audio.muted ? 'https://img.icons8.com/ios-filled/50/no-audio--v1.png' : 'https://img.icons8.com/ios-filled/50/high-volume--v1.png';
+    }
+});
+
+
+
 document.addEventListener('keydown', function(event) {
+    if (!gameState) {
+        return;
+    }
+    
     let new_player_vertical = player_vertical;
     let new_player_horizontal = player_horizontal;
     
     switch(event.key) {
-        // Player 1
         case 'ArrowUp':
             new_player_vertical -= player_speed;
             updatePlayerView('up');
@@ -119,7 +131,6 @@ document.addEventListener('keydown', function(event) {
             new_player_horizontal += player_speed;
             updatePlayerView('right');
             break;
-        
     }
 
     // Check boundaries
@@ -142,19 +153,19 @@ function updateGame() {
 
     checkCollisions();
 
-    checkDoor();
+    checkPortal();
 
-    // checkIfLost();
+    checkIfLost();
+
     requestAnimationFrame(updateGame);
-
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     var audio = document.getElementById('main_sound');
-    //     audio.play();
-    // });
 }
 
 // Move Enemies
 function moveEnemies() {
+    if (!gameState) {
+        return;
+    }
+
     enemies.forEach((enemy) => {
         let direction = enemy.dataset.direction === "1" ? 1 : -1;
         let speed = parseFloat(enemy.dataset.speed);
@@ -283,8 +294,9 @@ function checkCollisions() {
             }
             else{
                 // else reset player position and decrement life count
-                Reset_Player_Position(1);
-                updateLifeCount(1, player_lifeCount--);
+                Reset_Player_Position();
+                player_lifeCount = player_lifeCount - 1;
+                updateLifeCount(player_lifeCount);
                 playerCharacterState = "normal";
             }
         }
@@ -295,7 +307,8 @@ function checkCollisions() {
         const heartsRect = valuePac.getBoundingClientRect();
         if (rectsIntersect(heartsRect, playerRect)) {
             valuePac.style.display = 'none';
-            updateLifeCount(1, player_lifeCount++);
+            player_lifeCount = player_lifeCount + 1;
+            updateLifeCount(player_lifeCount);
         }
     });
 
@@ -464,11 +477,14 @@ function updateSheildPositions() {
     });
 }
 
-setInterval(updateValuePacPositions, 5000); // 5 seconds
-setInterval(updateHeartsPositions, 3000); // 3 seconds
-setInterval(updateReduceSpeedPositions, 7000); // 7 seconds
-setInterval(updateHammerPositions, 10000); // 10 seconds
-setInterval(updateSheildPositions, 15000); // 15 seconds
+if (gameState) {
+    setInterval(updateValuePacPositions, 5000); // 5 seconds
+    setInterval(updateHeartsPositions, 7000); // 3 seconds
+    setInterval(updateReduceSpeedPositions, 7000); // 7 seconds
+    setInterval(updateHammerPositions, 10000); // 10 seconds
+    setInterval(updateSheildPositions, 15000); // 15 seconds
+}
+
 
 // Start the game loop
 function Start_Game_Loop() {
@@ -477,16 +493,22 @@ function Start_Game_Loop() {
 
 // ----------------------------- Check loosing condition -----------------------------
 function checkIfLost() {
-    const youLost_menu = document.querySelector('.loose_menu_container');
-    const whichPlayerLost = document.getElementById("whichPlayerLost");
+    const youLost_menu = document.querySelector('.loose_container');
 
-    if (player_lifeCount < 0) {
+    if (player_lifeCount <= 0) {
         youLost_menu.style.display = 'flex';
-        whichPlayerLost.innerText = "You LOST!!!!"
-    }
-    else if (Time < -1){
-        youLost_menu.style.display = 'flex';
-        whichPlayerLost.innerText = "Losers. Both of you."
+        gameState = false;
+
+        const gameScreenLevel1 = document.querySelector('.game_screen_level1');
+        const children = gameScreenLevel1.children;
+    
+        for (let i = 0; i < children.length; i++) {
+            children[i].style.display = 'none';
+        }
+
+        const portal = document.querySelector('.portal');
+        portal.style.display = 'none';
+        
     }
 }
 
@@ -499,27 +521,31 @@ function updateScoreCount(whichPlayer){
     }
 }
 
-function updateLifeCount(whichPlayer, newLifeCount) {
-
+function updateLifeCount(newLifeCount) {
     player_lifeCountElement.textContent = newLifeCount;
     
 }
 
 // ----------------------------- Door & Winning -----------------------------
-function checkDoor() {
+function checkPortal() {
     const portal = document.getElementById('portal');
     const portal_rect = portal.getBoundingClientRect();
     const playerRect = player.getBoundingClientRect();
+    const youLost_menu = document.querySelector('.loose_container');
 
     // if player collides with portal and has key, then go to level 2 "2-level.html"
     if (rectsIntersect(portal_rect, playerRect) && keyPickedUp) {
         var game_screen_level1 = document.querySelector('.game_screen_level1');
         var gameStatus = document.querySelector('.gameStatus');
         var otherscreen = document.getElementById('pause_menu_container');
+        youLost_menu.style.display = 'none';
 
         game_screen_level1.style.display = 'none';
         gameStatus.style.display = 'none';
         otherscreen.style.display = 'none';
+
+        var audio = document.getElementById('main_sound');
+        audio.pause();
         
         var video = document.getElementById('lvl1Tolvl2_video');
         video.style.display = 'block'; // Show the video
@@ -541,16 +567,10 @@ function Start_Count_Down() {
     var Time = 0; // Initialize Time to 0
     var timeCountElement = document.getElementById('time_count');
     var countdownTimer = setInterval(function() {
+        Time++; // Increment Time by 1
         var minutes = Math.floor(Time / 60);
         var seconds = Time % 60;
         timeCountElement.textContent = formatTime(minutes, seconds);
-
-        if (Time === -2) {
-            clearInterval(countdownTimer);
-            // checkIfLost();
-        } else {
-            Time++;
-        }
     }, 1000);
 }
 
