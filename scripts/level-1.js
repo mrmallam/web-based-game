@@ -10,7 +10,7 @@ const valuePack_container = document.querySelector('.valuepacks_container');
 const player_speed = 50; // 50px per keypress
 let player_vertical = player.getBoundingClientRect().top;
 let player_horizontal = player.getBoundingClientRect().left;
-let player_lifeCount = 5;
+let player_lifeCount = 3;
 let Time = 120; // 2 minutes in seconds
 let playerScoreCount = 0;
 let playerCharacterState = "normal";
@@ -19,10 +19,8 @@ var player_lifeCountElement = document.querySelector('.player_lives');
 let gameState = true;
 let soundPlayed = false;
 
-
-
-
 var level1Music = new Audio('./assets/audio/Level_1.wav');
+level1Music.play();
 
 var hammer = new Audio('./assets/audio/hammer.wav');
 var sheild = new Audio('./assets/audio/sheild.wav');

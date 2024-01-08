@@ -139,10 +139,10 @@ document.addEventListener('keydown', function(event) {
     let new_player_vertical = player_vertical;
     let new_player_horizontal = player_horizontal;
 
-
     if (!gameState) {
         return;
     }
+
     // Move player
     switch(event.key) {
         case 'ArrowUp':
@@ -206,7 +206,6 @@ function updateGame() {
 
     checkIfLost();
     requestAnimationFrame(updateGame);
-
 }
 
 // Move Enemies
@@ -414,8 +413,6 @@ function checkCollisions() {
     // Check collision for portal
     const portalRect = portal_lvl2.getBoundingClientRect();
     if (rectsIntersect(portalRect, playerRect)) {
-        
-        // call function to display final video
         displayFinalVideo();
     }
 }
@@ -440,9 +437,6 @@ function displayFinalVideo() {
     };
 }
 
-
-
-
 // Collision detection function
 function rectsIntersect(rectA, rectB) {
     return !(rectA.right < rectB.left || 
@@ -450,7 +444,6 @@ function rectsIntersect(rectA, rectB) {
              rectA.bottom < rectB.top || 
              rectA.top > rectB.bottom);
 }
-
 
 // Start the game loop
 function Start_Game_Loop() {
