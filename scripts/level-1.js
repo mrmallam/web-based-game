@@ -7,7 +7,7 @@ const hearts = document.querySelectorAll('.heart');
 const initial_player_vertical = gameArea.clientHeight - player.offsetHeight;
 const initial_player_horizontal = gameArea.clientWidth - player.offsetWidth;
 const valuePack_container = document.querySelector('.valuepacks_container');
-const player_speed = 50; // 50px per keypress
+const player_speed = 5; // 50px per keypress
 let player_vertical = player.getBoundingClientRect().top;
 let player_horizontal = player.getBoundingClientRect().left;
 let player_lifeCount = 3;
@@ -149,47 +149,77 @@ document.getElementById('muteButton').addEventListener('click', function() {
 
 });
 
+// Define movement flags
+let moveUp = false, moveDown = false, moveLeft = false, moveRight = false;
 
-
+// Adjusted keydown event listener
 document.addEventListener('keydown', function(event) {
     if (!gameState) {
         return;
     }
-    
-    let new_player_vertical = player_vertical;
-    let new_player_horizontal = player_horizontal;
-    
     switch(event.key) {
         case 'ArrowUp':
-            new_player_vertical -= player_speed;
+            moveUp = true;
             updatePlayerView('up');
             break;
         case 'ArrowDown':
-            new_player_vertical += player_speed;
+            moveDown = true;
             updatePlayerView('down');
             break;
         case 'ArrowLeft':
-            new_player_horizontal -= player_speed;
+            moveLeft = true;
             updatePlayerView('left');
             break;
         case 'ArrowRight':
-            new_player_horizontal += player_speed;
+            moveRight = true;
             updatePlayerView('right');
             break;
     }
+});
+
+// Keyup event listener to stop movement
+document.addEventListener('keyup', function(event) {
+    switch(event.key) {
+        case 'ArrowUp': moveUp = false; break;
+        case 'ArrowDown': moveDown = false; break;
+        case 'ArrowLeft': moveLeft = false; break;
+        case 'ArrowRight': moveRight = false; break;
+    }
+});
+
+// Smooth movement function
+function smoothMovePlayer() {
+    if (!gameState) {
+        return;
+    }
+
+    if (moveUp) {
+        player_vertical -= player_speed;
+    }
+    if (moveDown) {
+        player_vertical += player_speed;
+    }
+    if (moveLeft) {
+        player_horizontal -= player_speed;
+    }
+    if (moveRight) {
+        player_horizontal += player_speed;
+    }
 
     // Check boundaries
-    // Player
-    if (new_player_vertical > 0 && (new_player_vertical + player.offsetHeight) < gameArea.offsetHeight) {
-        player_vertical = new_player_vertical;
+    if (player_vertical > 0 && (player_vertical + player.offsetHeight) < gameArea.offsetHeight) {
+        player.style.top = `${player_vertical}px`;
     }
-    if (new_player_horizontal > 0 && (new_player_horizontal + player.offsetWidth) < gameArea.offsetWidth) {
-        player_horizontal = new_player_horizontal;
+    if (player_horizontal > 0 && (player_horizontal + player.offsetWidth) < gameArea.offsetWidth) {
+        player.style.left = `${player_horizontal}px`;
     }
-    
-    player.style.top = `${player_vertical}px`;
-    player.style.left = `${player_horizontal}px`;
-});
+
+    requestAnimationFrame(smoothMovePlayer);
+}
+
+// Start the smooth movement
+smoothMovePlayer();
+
 
 // ----------------------------- Game Loop/Bullets/Collision Detection -----------------------------`
 // Game loop function

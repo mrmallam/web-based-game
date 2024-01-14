@@ -6,7 +6,7 @@ const hearts = document.querySelectorAll('.heart2');
 const initial_player_vertical = gameArea.clientHeight - player.offsetHeight;
 const initial_player_horizontal = gameArea.clientWidth - player.offsetWidth;
 const valuePack_container = document.querySelector('.valuepacks_container');
-const player_speed = 30; // 50px per keypress
+const player_speed = 5; // 50px per keypress
 let player_vertical = player.getBoundingClientRect().top;
 let player_horizontal = player.getBoundingClientRect().left;
 // let player_lifeCount = 10;
@@ -135,62 +135,147 @@ function isColliding(player, wall) {
     );
 }
 
-document.addEventListener('keydown', function(event) {
-    let new_player_vertical = player_vertical;
-    let new_player_horizontal = player_horizontal;
+// document.addEventListener('keydown', function(event) {
+//     let new_player_vertical = player_vertical;
+//     let new_player_horizontal = player_horizontal;
 
+//     if (!gameState) {
+//         return;
+//     }
+
+//     // Move player
+//     switch(event.key) {
+//         case 'ArrowUp':
+//             new_player_vertical -= player_speed;
+//             updatePlayerView('up');
+//             break;
+//         case 'ArrowDown':
+//             new_player_vertical += player_speed;
+//             updatePlayerView('down');
+//             break;
+//         case 'ArrowLeft':
+//             new_player_horizontal -= player_speed;
+//             updatePlayerView('left');
+//             break;
+//         case 'ArrowRight':
+//             new_player_horizontal += player_speed;
+//             updatePlayerView('right');
+//             break;
+//     }
+
+//     // Boundary checks
+//     if (event.key === 'ArrowUp' && new_player_vertical <= 0) {
+//         new_player_vertical = 0;
+//     } else if (event.key === 'ArrowDown' && (new_player_vertical + player.offsetHeight) >= gameArea.offsetHeight) {
+//         new_player_vertical = gameArea.offsetHeight - player.offsetHeight;
+//     }
+
+//     if (event.key === 'ArrowLeft' && new_player_horizontal <= 0) {
+//         new_player_horizontal = 0;
+//     } else if (event.key === 'ArrowRight' && (new_player_horizontal + player.offsetWidth) >= gameArea.offsetWidth) {
+//         new_player_horizontal = gameArea.offsetWidth - player.offsetWidth;
+//     }
+
+//     // Temporary move player to check for collision with any wall
+//     player.style.top = `${new_player_vertical}px`;
+//     player.style.left = `${new_player_horizontal}px`;
+
+//     // Check for collision with any wall
+//     if (isCollidingWithAnyWall(player, walls)) {
+//         // Undo move if collision is detected
+//         player.style.top = `${player_vertical}px`;
+//         player.style.left = `${player_horizontal}px`;
+//     } else {
+//         // Update player position if no collision with any wall and within boundaries
+//         player_vertical = new_player_vertical;
+//         player_horizontal = new_player_horizontal;
+//     }
+// });
+
+// Define movement flags
+let moveUp = false, moveDown = false, moveLeft = false, moveRight = false;
+
+// Adjusted keydown event listener
+document.addEventListener('keydown', function(event) {
+    if (!gameState) {
+        return;
+    }
+    switch(event.key) {
+        case 'ArrowUp':
+            moveUp = true;
+            updatePlayerView('up');
+            break;
+        case 'ArrowDown':
+            moveDown = true;
+            updatePlayerView('down');
+            break;
+        case 'ArrowLeft':
+            moveLeft = true;
+            updatePlayerView('left');
+            break;
+        case 'ArrowRight':
+            moveRight = true;
+            updatePlayerView('right');
+            break;
+    }
+});
+
+// Keyup event listener
+document.addEventListener('keyup', function(event) {
+    switch(event.key) {
+        case 'ArrowUp': moveUp = false; break;
+        case 'ArrowDown': moveDown = false; break;
+        case 'ArrowLeft': moveLeft = false; break;
+        case 'ArrowRight': moveRight = false; break;
+    }
+});
+
+// Smooth movement function with collision check
+function smoothMovePlayerWithCollision() {
     if (!gameState) {
         return;
     }
 
-    // Move player
-    switch(event.key) {
-        case 'ArrowUp':
-            new_player_vertical -= player_speed;
-            updatePlayerView('up');
-            break;
-        case 'ArrowDown':
-            new_player_vertical += player_speed;
-            updatePlayerView('down');
-            break;
-        case 'ArrowLeft':
-            new_player_horizontal -= player_speed;
-            updatePlayerView('left');
-            break;
-        case 'ArrowRight':
-            new_player_horizontal += player_speed;
-            updatePlayerView('right');
-            break;
+    let new_player_vertical = player_vertical;
+    let new_player_horizontal = player_horizontal;
+
+    if (moveUp) {
+        new_player_vertical -= player_speed;
+    }
+    if (moveDown) {
+        new_player_vertical += player_speed;
+    }
+    if (moveLeft) {
+        new_player_horizontal -= player_speed;
+    }
+    if (moveRight) {
+        new_player_horizontal += player_speed;
     }
 
     // Boundary checks
-    if (event.key === 'ArrowUp' && new_player_vertical <= 0) {
-        new_player_vertical = 0;
-    } else if (event.key === 'ArrowDown' && (new_player_vertical + player.offsetHeight) >= gameArea.offsetHeight) {
-        new_player_vertical = gameArea.offsetHeight - player.offsetHeight;
-    }
+    new_player_vertical = Math.max(0, Math.min(new_player_vertical, gameArea.offsetHeight - player.offsetHeight));
+    new_player_horizontal = Math.max(0, Math.min(new_player_horizontal, gameArea.offsetWidth - player.offsetWidth));
 
-    if (event.key === 'ArrowLeft' && new_player_horizontal <= 0) {
-        new_player_horizontal = 0;
-    } else if (event.key === 'ArrowRight' && (new_player_horizontal + player.offsetWidth) >= gameArea.offsetWidth) {
-        new_player_horizontal = gameArea.offsetWidth - player.offsetWidth;
-    }
-
-    // Temporary move player to check for collision with any wall
+    // Temporary move player to check for collision
     player.style.top = `${new_player_vertical}px`;
     player.style.left = `${new_player_horizontal}px`;
 
-    // Check for collision with any wall
-    if (isCollidingWithAnyWall(player, walls)) {
+    if (!isCollidingWithAnyWall(player, walls)) {
+        // Update player position if no collision
+        player_vertical = new_player_vertical;
+        player_horizontal = new_player_horizontal;
+    } else {
         // Undo move if collision is detected
         player.style.top = `${player_vertical}px`;
         player.style.left = `${player_horizontal}px`;
-    } else {
-        // Update player position if no collision with any wall and within boundaries
-        player_vertical = new_player_vertical;
-        player_horizontal = new_player_horizontal;
     }
-});
+
+    requestAnimationFrame(smoothMovePlayerWithCollision);
+}
+
+// Start the smooth movement
+smoothMovePlayerWithCollision();
+
 
 // ----------------------------- Game Loop/Bullets/Collision Detection -----------------------------`
 // Game loop function

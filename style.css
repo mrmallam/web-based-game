@@ -842,7 +842,6 @@
         background-size: cover;
         top: 350px;
     }
-
 }
 
 @media screen and (max-width: 1024px) {
@@ -854,7 +853,6 @@
         font-size: 30px;
         font-weight: bold;
     }
-
     .mainVideo_container, .menu_container{
         display: none;
     }
