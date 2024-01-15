@@ -10,12 +10,13 @@ const valuePack_container = document.querySelector('.valuepacks_container');
 const player_speed = 5; // 50px per keypress
 let player_vertical = player.getBoundingClientRect().top;
 let player_horizontal = player.getBoundingClientRect().left;
-let player_lifeCount = 3;
 let Time = 120; // 2 minutes in seconds
 let playerScoreCount = 0;
 let playerCharacterState = "normal";
 let keyPickedUp = false;
+let player_lifeCount = 3;
 var player_lifeCountElement = document.querySelector('.player_lives');
+player_lifeCountElement.textContent = player_lifeCount;
 let gameState = true;
 let soundPlayed = false;
 
@@ -68,15 +69,16 @@ Randomize_Hearts_Position();
 Randomize_ReduceSpeed_Position();
 Randomize_hammer_Position();
 Randomize_sheild_Position();
-player_lifeCountElement.textContent = player_lifeCount;
 
 // -----------------------------PLAYER MOVEMENT LOGIC-----------------------------
 function Reset_Player_Position() {
-    player.style.top = '400px';
-    player.style.left = '1350px';
+    player.style.top = '100px';
+    player.style.left = '';
+    player.style.right = '0px';
 
     player_vertical = 400;
-    player_horizontal = 1350;
+    player_horizontal = window.innerWidth - player.offsetWidth;
+
 }
 
 // Player movement
